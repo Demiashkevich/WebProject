@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - cinema_rating@localhost" uuid="182ba4db-d86a-4461-a422-6c3ac9e9e3bd">
+    <database-info product="MySQL" version="5.7.9-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="cinema_rating"/>
+    <table name="actor" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="actor_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" autoIncrement="true"/>
+      <column name="first_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="last_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="biography" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="photo" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="rating" sqlType="DECIMAL" precision="3" scale="2" nullable="true" jdbcType="3"/>
+      <primary-key name="PRIMARY" columns="actor_id"/>
+      <exported-key name="fk_movie_has_actor_actor1" table="movie_actor" schema="" catalog="cinema_rating" columns="actor_id"/>
+    </table>
+    <table name="category" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="category_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0LbQsNC90YDQsA=="/>
+      <column name="name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" remarks="0J3QsNC30LLQsNC90LjQtSDQttCw0L3RgNCw"/>
+      <primary-key name="PRIMARY" columns="category_id"/>
+      <exported-key name="fk_category_has_movie_category" table="category_movie" schema="" catalog="cinema_rating" columns="category_id"/>
+    </table>
+    <table name="category_movie" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="category_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0LbQsNC90YDQsA=="/>
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YTQuNC70YzQvNCw"/>
+      <primary-key name="PRIMARY" columns="category_id,movie_id"/>
+      <foreign-key name="fk_category_has_movie_category" columns="category_id" ref-table="category" ref-schema="" ref-catalog="cinema_rating" ref-columns="category_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_category_has_movie_movie1" columns="movie_id" ref-table="movie" ref-schema="" ref-catalog="cinema_rating" ref-columns="movie_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_category_movie_category_idx" unique="false" columns="category_id"/>
+      <index name="fk_category_movie_movie_idx" unique="false" columns="movie_id"/>
+    </table>
+    <table name="country" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="county_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0JrQvtC0INGB0YLRgNCw0L3Riw=="/>
+      <column name="name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" remarks="0J3QsNC30LLQsNC90LjQtSDQttCw0L3RgNCw"/>
+      <primary-key name="PRIMARY" columns="county_id"/>
+      <exported-key name="fk_movie_has_country_country1" table="movie_country" schema="" catalog="cinema_rating" columns="country_id"/>
+    </table>
+    <table name="evaluation" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="user_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GP"/>
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YTQuNC70YzQvNCw"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="0J3QsNC40LzQtdC90L7QstCw0L3QuNC1INC30LDQs9C+0LvQvtCy0LrQsCDQutC+0LzQvNC10L3RgtCw0YDQuNGPINC6INGE0LjQu9GM0LzRgw=="/>
+      <column name="comment" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1" remarks="0JrQvtC80LzQtdC90YLQsNGA0LjQuSDQuiDRhNC40LvRjNC80YM="/>
+      <column name="rating" sqlType="DECIMAL" precision="3" scale="1" nullable="true" jdbcType="3" remarks="0KDQtdC50YLQuNC90LMg0YTQuNC70YzQvNCw"/>
+      <primary-key name="PRIMARY" columns="user_id,movie_id"/>
+      <foreign-key name="fk_evaluation_movie1" columns="movie_id" ref-table="movie" ref-schema="" ref-catalog="cinema_rating" ref-columns="movie_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_evaluation_user1" columns="user_id" ref-table="user" ref-schema="" ref-catalog="cinema_rating" ref-columns="user_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_evaluation_movie_idx" unique="false" columns="movie_id"/>
+      <index name="fk_evaluation_user_idx" unique="false" columns="user_id"/>
+    </table>
+    <table name="movie" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC10YTQuNC60LDRgtC+0YAg0YTQuNC70YzQvNCw"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="0J3QsNC30LLQsNC90LjQtSDRhNC40LvRjNC80LA="/>
+      <column name="date" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="description" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1" remarks="0JrRgNCw0YLQutC+0LUg0L7Qv9C40YHQsNC90LjQtSDRhNC40LvRjNC80LA="/>
+      <column name="length" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="true" jdbcType="5" remarks="0JTQu9C40YLQtdC70YzQvdC+0YHRgtGMINGE0LjQu9GM0LzQsA=="/>
+      <column name="poster" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="rating" sqlType="DECIMAL UNSIGNED" precision="3" scale="2" nullable="true" jdbcType="3"/>
+      <primary-key name="PRIMARY" columns="movie_id"/>
+      <exported-key name="fk_category_has_movie_movie1" table="category_movie" schema="" catalog="cinema_rating" columns="movie_id"/>
+      <exported-key name="fk_evaluation_movie1" table="evaluation" schema="" catalog="cinema_rating" columns="movie_id"/>
+      <exported-key name="fk_movie_has_actor_movie1" table="movie_actor" schema="" catalog="cinema_rating" columns="movie_id"/>
+      <exported-key name="fk_movie_has_country_movie1" table="movie_country" schema="" catalog="cinema_rating" columns="movie_id"/>
+      <exported-key name="fk_movie_crew_role_movie" table="movie_person_role" schema="" catalog="cinema_rating" columns="movie_id"/>
+      <index name="title" unique="false" columns="title"/>
+    </table>
+    <table name="movie_actor" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4"/>
+      <column name="actor_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5"/>
+      <primary-key name="PRIMARY" columns="movie_id,actor_id"/>
+      <foreign-key name="fk_movie_has_actor_actor1" columns="actor_id" ref-table="actor" ref-schema="" ref-catalog="cinema_rating" ref-columns="actor_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_movie_has_actor_movie1" columns="movie_id" ref-table="movie" ref-schema="" ref-catalog="cinema_rating" ref-columns="movie_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_movie_has_actor_actor1_idx" unique="false" columns="actor_id"/>
+      <index name="fk_movie_has_actor_movie1_idx" unique="false" columns="movie_id"/>
+    </table>
+    <table name="movie_country" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YTQuNC70YzQvNCw"/>
+      <column name="country_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0JrQvtC0INGB0YLRgNCw0L3Riw=="/>
+      <primary-key name="PRIMARY" columns="movie_id,country_id"/>
+      <foreign-key name="fk_movie_has_country_country1" columns="country_id" ref-table="country" ref-schema="" ref-catalog="cinema_rating" ref-columns="county_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_movie_has_country_movie1" columns="movie_id" ref-table="movie" ref-schema="" ref-catalog="cinema_rating" ref-columns="movie_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_movie_country_country_idx" unique="false" columns="country_id"/>
+      <index name="fk_movie_country_movie_idx" unique="false" columns="movie_id"/>
+    </table>
+    <table name="movie_person_role" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="movie_id" sqlType="MEDIUMINT UNSIGNED" precision="8" scale="0" nullable="false" jdbcType="4" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YTQuNC70YzQvNCw"/>
+      <column name="person_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YfQtdC70L7QstC10LrQsCDQuNC3INGB0YrQtdC80L7Rh9C90L7QuSDQs9GA0YPQv9C/0Ys="/>
+      <column name="role_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0LLRi9C/0L7Qu9C90Y/QtdC80L7QuSDRhNGD0L3QutGG0LjQuA=="/>
+      <primary-key name="PRIMARY" columns="movie_id,person_id,role_id"/>
+      <foreign-key name="fk_movie_crew_role_movie" columns="movie_id" ref-table="movie" ref-schema="" ref-catalog="cinema_rating" ref-columns="movie_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_movie_crew_role_person" columns="person_id" ref-table="person" ref-schema="" ref-catalog="cinema_rating" ref-columns="person_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_movie_crew_role_role" columns="role_id" ref-table="role" ref-schema="" ref-catalog="cinema_rating" ref-columns="role_id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_movie_person_role_movie_idx" unique="false" columns="movie_id"/>
+      <index name="fk_movie_person_role_person_idx" unique="false" columns="person_id"/>
+      <index name="fk_movie_person_role_role_idx" unique="false" columns="role_id"/>
+    </table>
+    <table name="person" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="person_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0YfQtdC70L7QstC10LrQsCDQuNC3INGB0YrQtdC80L7Rh9C90L7QuSDQs9GA0YPQv9C/0Ys="/>
+      <column name="first_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" remarks="0JjQvNGPINGH0LXQu9C+0LLQtdC60LAg0LjQtyDRgdGK0LXQvNC+0YfQvdC+0Lkg0LPRgNGD0L/Qv9GL"/>
+      <column name="last_name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" remarks="0KTQsNC80LjQu9C40Y8g0YfQtdC70L7QstC10LrQsCDQuNC3INGB0YrQtdC80L7Rh9C90L7QuSDQs9GA0YPQv9C/0Ys="/>
+      <primary-key name="PRIMARY" columns="person_id"/>
+      <exported-key name="fk_movie_crew_role_person" table="movie_person_role" schema="" catalog="cinema_rating" columns="person_id"/>
+    </table>
+    <table name="role" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="role_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0LLRi9C/0L7Qu9C90Y/QtdC80L7QuSDRhNGD0L3QutGG0LjQuCDRh9C10LvQvtCy0LXQutCwINC40Lcg0YHRitC10LzQvtGH0L3QvtC5INCz0YDRg9C/0L/Riw=="/>
+      <column name="name" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" remarks="0J3QsNC30LLQsNC90LjQtSDQstGL0L/QvtC70L3Rj9C10LzQvtC5INGE0YPQvdC60YbQuNC4"/>
+      <primary-key name="PRIMARY" columns="role_id"/>
+      <exported-key name="fk_movie_crew_role_role" table="movie_person_role" schema="" catalog="cinema_rating" columns="role_id"/>
+    </table>
+    <table name="user" schema="" catalog="cinema_rating" type="TABLE">
+      <column name="user_id" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5" remarks="0KPQvdC40LrQsNC70YzQvdGL0Lkg0LjQtNC10L3RgtC40YTQuNC60LDRgtC+0YAg0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GP" autoIncrement="true"/>
+      <column name="password" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="0J/QsNGA0L7Qu9GM"/>
+      <column name="first_name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="0JjQvNGPINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjw=="/>
+      <column name="last_name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="0KTQsNC80LjQu9C40Y8g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GP"/>
+      <column name="email" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="0K3Qu9C10LrRgtGA0L7QvdC90YvQuSDQsNC00YDQtdGBINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjw=="/>
+      <column name="photo" sqlType="LONGBLOB" precision="2147483647" scale="0" nullable="true" jdbcType="-4"/>
+      <column name="admin" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KDQvtC70Ywg0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GPOiB0cnVlIC0g0LDQtNC80LjQvdC40YHRgtGA0LDRgtC+0YAsIGZhbHNlIC0g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GM"/>
+      <column name="status" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" remarks="0KHRgtCw0YLRg9GBINC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjzogdHJ1ZSAtINCw0LrRgtC40LLQvdGL0LksIGZhbHNlIC0g0L3QtdCw0LrRgtC40LLQvdGL0LkgKNC30LDQsdC70L7QutC40YDQvtCy0LDQvSk="/>
+      <primary-key name="PRIMARY" columns="user_id"/>
+      <exported-key name="fk_evaluation_user1" table="evaluation" schema="" catalog="cinema_rating" columns="user_id"/>
+      <index name="email_UNIQUE" unique="true" columns="email"/>
+    </table>
+  </data-source>
+</component>

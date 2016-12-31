@@ -1,0 +1,352 @@
+@font-face {
+	font-weight: 300;
+	font-family:'Myriad';
+	src: url("../fonts/myriad.woff");
+}
+body{
+	margin: 0;
+	padding: 0;
+	min-width: 1050px;
+}
+.gn{
+	background: rgba(0,0,0,0.8);
+}
+.gn-context, .sm-context, .sa-context{
+	padding: 0 20px;
+	max-width: 980px;
+	margin: 0 auto;
+	height: inherit;
+}
+.gn-list{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-align: justify;
+	height: 44px;
+}
+.gn-list:after{
+    content: '';
+    width: 100%;
+    display: inline-block;
+}
+.gn-item{
+	height: inherit;
+	vertical-align: top;
+  	display: inline-block;
+}
+.gn-item a:before{
+	content: '';
+  	display: inline-block;
+  	height: inherit;
+  	vertical-align: middle;
+}
+.gn-item a{
+	display: inline-block;
+	height: inherit;
+	padding: 0 15px;
+	font-size: 16px;
+	text-decoration: none;
+	color: white;
+	transition: 200ms linear;
+}
+.gn-item a:hover{
+	opacity: .65;
+}
+.gn-link-text{
+	vertical-align: middle;
+	font-family: "Myriad","Arial",sans-serif;
+}
+#blackout{
+	display: none;
+	z-index: 1;
+	width:100%;
+    min-height:100%;
+    background-color: rgba(1, 1, 1, 0.725);
+    overflow:hidden;
+    position:fixed;
+    top: 0;
+}
+#si-sign-in{
+	display: none;
+	background-color: white;
+	border: 1px solid #d6d6d6;
+	z-index: 99;
+    border-radius: 4px;
+	padding: 20px;
+	width: 322px;
+	height: 145px;
+	margin: 200px auto;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+}
+.sm-header, .sa-header{
+    height: 52px;
+}
+.sm-header:after, .sm-movies:after, .sa-header:after, .sa-actors:after{
+    content: "";
+    display: block;
+    top: 0;
+    margin: 0 auto;
+    width: 980px;
+    height: 1px;
+    background-color: rgba(214,214,214,0.4);
+}
+.sm-hc, .sa-hc{
+	padding: 0 20px;
+	max-width: 980px;
+	margin: 0 auto;
+	height: inherit;
+}
+.sm-hc-title, .sa-hc-title{
+	font-size: 28px;
+	float: left;
+	height: inherit;
+	margin: 0;
+    padding: 0;
+    line-height: 60px;
+    font-family: "Myriad","Arial",sans-serif;
+    font-weight: 300;
+}
+.sm-hc-action, .sa-hc-action{
+	float: right;
+	margin: 0;
+	height: inherit;
+	line-height: 53px;
+}
+.sm-hc-button, .sa-hc-button{
+    line-height: 1.7;
+    background: linear-gradient(#42a1ec, #0070c9);
+    border: 1px solid #07c;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 0 10px;
+}
+.sm-hc-button a, .sa-hc-button a{
+	font-weight: 100;
+	font-size: 13px;
+	text-decoration: none;
+    font-family: "Myriad","Arial",sans-serif;
+    color: white;
+}
+.sm-movies, .sa-actors{
+	overflow: auto;
+}
+.sm-cm, .sa-ca{
+    display: inline-block;
+    text-align: center;
+    float: left;
+    margin: 10px;
+}
+.sm-cm img, .sa-ca img{
+	height: 333px;
+	width: inherit;
+}
+.sm-cm-link, .sa-ca-link{
+	display: inline-block;
+	text-decoration: none;
+	width: 225px;
+	font-family: "Myriad","Arial",sans-serif;
+	font-weight: 100;
+}
+.sm-movie-title, .sa-actor-title{
+	display: block;
+	color: #666;
+}
+.sm-movie-title:hover, .sa-actor:hover{
+	color: #333;
+    text-decoration: underline;
+}
+.gf{
+	height: 25px;
+	animation-name: fade;
+	animation-duration: 900ms;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+}
+.gf-context{
+	max-width: 980px;
+	margin: 0 auto;
+	height: inherit;
+	padding: 3px 20px 0;
+}
+.gf-copyright{
+	float: left;
+}
+.gf-ct{
+	color: #999;
+	font-size: 13px;
+	font-family: "Myriad","Arial",sans-serif;
+	font-weight: bold;
+}
+.gf-locale{
+	float: right;
+}
+.gf-locale a{
+	text-decoration: none;
+}
+.gf-lp{
+	margin-right: 3px;
+	vertical-align: text-bottom;
+}
+.gf-lt{
+	color: #666;
+	font-size: 12px;
+	font-family: "Myriad","Arial",sans-serif;
+	font-weight: 100;
+}
+@keyframes fadeIn {
+ 	from { opacity:0; }
+  	to { opacity:1; } 
+}
+.fade-in {
+	opacity:0;
+	animation:fadeIn ease-in;
+	animation-fill-mode:forwards;
+	animation-duration: 900ms;
+}
+.fade-in.latest {
+	animation-delay: 400ms;
+}
+.fade-in.middle {
+	animation-delay: 200ms;
+}
+.fade-in.first {
+	animation-delay: 100ms;
+}
+.sc{
+	position: relative;
+	width: 100%;
+	line-height: 120px;
+	height: 120px;
+}
+.sc img{
+	height: inherit;
+	width: inherit;
+}
+.sc-title{
+	position: absolute;
+	width: 100%;
+	margin: 0;
+	top: 0;
+	text-align: center;
+}
+.sc-title-text{
+	color: white;
+	font-size: 35px;
+	font-family: "Myriad","Arial",sans-serif;
+	font-weight: 100;
+}
+.si{
+	padding: 20px;
+	width: 460px;
+	margin: 0 auto;
+}
+.si-list{
+	list-style:none;
+	width: inherit;
+	margin: 0;
+	padding: 0;
+}
+.si-item{
+	position: relative;
+	width: inherit;
+	padding-bottom: 20px;
+}
+.si-item:last-child{
+	overflow: hidden;
+	text-align: center;
+}
+.form-input{
+	padding-left: 20px;
+	height: 34px;
+	border: 1px solid #d6d6d6;
+    border-radius: 4px;
+	font-size: 16px;
+	width: 458px;
+}
+.form-input:focus{
+    border-color: #0070c9;
+    box-shadow: 0 0 0 3px rgba(0, 112, 201, 0.3);
+}
+.si-form-button{
+	font-family: "Myriad","Arial",sans-serif;
+    font-size: 17px;
+    color: white;
+    height: 40px;
+    width: 100px;
+    background: linear-gradient(#42a1ec, #0070c9);
+    border: 1px solid #07c;
+    border-radius: 4px;
+}
+.si-fc-button{
+	float: right;
+}
+.si-fc-link{
+	color: #0085cf;
+	float: left;
+	text-decoration: none;
+}
+.si-fc-link:hover{
+	text-decoration: underline;
+}
+.si-form-help{
+    top: -120px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background: #ffdf81;
+    border: 1.7px solid #676767;
+    border-radius: 4px;
+    text-align: center;
+    z-index: 999;
+    position: absolute;
+	display: none;
+}
+.si-form-help-context{
+	height: inherit;
+	overflow: hidden;
+	display: inline-block;
+	font-family: "Myriad","Arial",sans-serif;
+	font-weight: bold;
+    font-size: 19px;
+    color: #676767;
+}
+
+.form-input:focus + .si-form-help {
+	display: inline;
+}
+.error-input-fade-in {
+	opacity:0;
+	animation:fadeInError cubic-bezier(.47,-.44,.49,1.40);
+	animation-fill-mode:forwards;
+	animation-duration: 130ms;
+}
+.error-input-item{
+	position: relative;
+	width: inherit;
+	padding-bottom: 20px;
+}
+.error-input-item .form-input{
+	background-color: #ffeebd;
+}
+@keyframes fadeInError {
+ 	from { 
+ 		top: -60px;
+ 		opacity:0;
+ 		width: 0;
+ 		height: 0;
+ 		line-height: 0;
+ 	 }
+  	to { 
+  		top:-120px;
+  		opacity:1;
+  		width: 400px;
+  		height: 40px;
+ 		line-height: 40px;
+  	} 
+}
