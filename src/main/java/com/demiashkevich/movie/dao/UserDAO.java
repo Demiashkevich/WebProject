@@ -10,22 +10,20 @@ import java.util.List;
 
 public class UserDAO extends AbstractDAO<User>{
 
-    private static final String SEARCH_USER = "SELECT user.email FROM  user WHERE user.email = ?";
-    private static final String SELECT_USER = "SELECT user.user_id, user.password, user.first_name, user.last_name, user.email, user.photo, user.admin, user.status FROM user WHERE user.email = ? AND user.password = ? LIMIT 1";
+    private static final String SELECT_USER = "SELECT user.user_id, user.password, user.first_name, user.last_name, user.email, user.photo, user.admin, user.status FROM user WHERE user.email = ? LIMIT 1";
     private static final String INSERT_CREATE_ACCOUNT = "INSERT INTO user(password, first_name, last_name, email, photo, admin, status) VALUES (?,?,?,?,?,?,?)";
+    private static final String DELETE_USER = "DELETE FROM user WHERE user.user_id = ?";
 
     public UserDAO(ProxyConnection connection) {
         super(connection);
     }
 
-    public User findUser(String email, String password){
-        User user = null;
+    public User findUser(String email){
         try(PreparedStatement statement = connection.prepareStatement(SELECT_USER)){
             statement.setString(1, email);
-            statement.setString(2, password);
             try(ResultSet resultSet = statement.executeQuery()) {
                 if(resultSet.next()) {
-                    user = new User();
+                    User user = new User();
                     user.setUserId(resultSet.getInt(1));
                     user.setPassword(resultSet.getString(2));
                     user.setFirstName(resultSet.getString(3));
@@ -34,26 +32,13 @@ public class UserDAO extends AbstractDAO<User>{
                     user.setPhoto(resultSet.getString(6));
                     user.setAdmin(resultSet.getBoolean(7));
                     user.setStatus(resultSet.getBoolean(8));
+                    return user;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
-    }
-
-    public boolean isFindUser(String email){
-        try(PreparedStatement statement = connection.prepareStatement(SEARCH_USER)){
-            statement.setString(1, email);
-            try(ResultSet resultSet = statement.executeQuery()) {
-                if(resultSet.next()) {
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return null;
     }
 
     @Override
@@ -74,17 +59,47 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
-    protected List<User> parseResultSet(ResultSet resultSet) {
+     protected List<User> parseResultSetFull(ResultSet resultSet) {
         return null;
     }
 
     @Override
-    public String getSelectAll() {
+    protected List<User> parseResultSetLazy(ResultSet resultSet) {
         return null;
     }
 
     @Override
-    protected String getSelectLimitByRating() {
+    public String getSelectItemAll() {
+        return null;
+    }
+
+    @Override
+    protected String getSelectItemLimitByRating() {
+        return null;
+    }
+
+    @Override
+    protected String getSelectItemByMovieId() {
+        return null;
+    }
+
+    @Override
+    protected String getSelectItemByActorId() {
+        return null;
+    }
+
+    @Override
+    protected String getDeleteItemById() {
+        return DELETE_USER;
+    }
+
+    @Override
+    protected String getSelectItemLimit() {
+        return null;
+    }
+
+    @Override
+    protected String getSelectNumberRowItem() {
         return null;
     }
 

@@ -6,8 +6,10 @@ import java.util.List;
 
 public interface Service<T extends Entity, K> {
 
+    public List<T> findAllItem();
     public boolean addItem(T item);
-    public T getItem(K key);
-    public List<T> getItems(final int COUNT);
+    public T findItem(K key);
+    public List<T> findItems(final int COUNT);
+    public boolean deleteItem(long itemId);
 
 }

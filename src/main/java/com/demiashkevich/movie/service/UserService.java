@@ -18,11 +18,16 @@ public class UserService extends AbstractService <User, String> {
     }
 
     @Override
+    public List<User> findAllItem() {
+        return null;
+    }
+
+    @Override
     public boolean addItem(User user) {
         UserDAO userDAO = new UserDAO(connection);
         String email = user.getEmail();
 
-        if(!userDAO.isFindUser(email)){
+        if(userDAO.findUser(email) != null){
             if(validationStrategy.validate(user)) {
                 userDAO.addItem(user);
                 return true;
@@ -32,22 +37,29 @@ public class UserService extends AbstractService <User, String> {
     }
 
     @Override
-    public User getItem(String key) {
+    public User findItem(String key) {
         return null;
     }
 
-    public User getItem(String email, String password) {
+    public User findItem(String email, String password) {
         UserDAO userDAO = new UserDAO(connection);
-        User user = userDAO.findUser(email, password);
-        if (user != null) {
+        User user = userDAO.findUser(email);
+        if (user != null && password.equals(user.getPassword())) {
             return user;
         }
         return null;
     }
 
     @Override
-    public List<User> getItems(final int COUNT) {
+    public List<User> findItems(final int COUNT) {
         return null;
+    }
+
+    @Override
+    public boolean deleteItem(long itemId) {
+        UserDAO userDAO = new UserDAO(connection);
+        userDAO.deleteItem(itemId);
+        return true;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.demiashkevich.movie.entity;
 
+import java.util.List;
+
 public class User extends Entity {
 
     private int userId;
@@ -10,6 +12,7 @@ public class User extends Entity {
     private String photo;
     private boolean admin;
     private boolean status;
+    private List<Evaluation> evaluations;
 
     public int getUserId() {
         return userId;
@@ -67,7 +70,6 @@ public class User extends Entity {
         this.photo = photo;
     }
 
-
     public boolean isStatus() {
         return status;
     }
@@ -76,4 +78,11 @@ public class User extends Entity {
         this.status = status;
     }
 
+    public List<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(List<Evaluation> evaluations) {
+        this.evaluations = evaluations;
+    }
 }

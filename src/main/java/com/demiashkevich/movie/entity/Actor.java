@@ -9,6 +9,7 @@ public class Actor extends Entity{
     private String lastName;
     private String photo;
     private String biography;
+    private Double rating;
     private List<Movie> movies;
 
     public int getActorId() {
@@ -58,4 +59,13 @@ public class Actor extends Entity{
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
 }

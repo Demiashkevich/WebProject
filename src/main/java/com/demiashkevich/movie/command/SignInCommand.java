@@ -25,8 +25,7 @@ public class SignInCommand implements Command {
             String password = request.getParameter("password");
 
             UserService userService = new UserService(connection);
-            User user = userService.getItem(email, password);
-
+            User user = userService.findItem(email, password);
             if (user != null) {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);

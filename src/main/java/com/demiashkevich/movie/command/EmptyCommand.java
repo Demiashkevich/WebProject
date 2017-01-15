@@ -10,6 +10,7 @@ import com.demiashkevich.movie.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Locale;
 
 public class EmptyCommand implements Command {
 
@@ -20,16 +21,18 @@ public class EmptyCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         ProxyConnection connection = null;
-        try {
+            try {
             connection = ConnectionPool.takeConnection();
 
             MovieService movieService = new MovieService(connection);
-            List<Movie> movies = movieService.getItems(COUNT_MOVIES);
+            List<Movie> movies = movieService.findItems(COUNT_MOVIES);
             request.setAttribute("movies", movies);
 
             ActorService actorService = new ActorService(connection);
-            List<Actor> actors = actorService.getItems(COUNT_ACTORS);
+            List<Actor> actors = actorService.findItems(COUNT_ACTORS);
             request.setAttribute("actors", actors);
+
+            request.setAttribute("locale", Locale.getDefault());
         } finally {
             ConnectionPool.putConnection(connection);
         }
