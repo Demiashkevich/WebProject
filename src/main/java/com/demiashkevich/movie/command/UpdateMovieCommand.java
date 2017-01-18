@@ -8,7 +8,7 @@ import com.demiashkevich.movie.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class UpdateMovieCommand extends AbstractActionMovieCommand {
+public class UpdateMovieCommand extends AbstractActionCommand {
 
     private static final String PAGE_SUCCESS = "path.page.success";
 
