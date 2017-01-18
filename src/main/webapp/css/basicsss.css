@@ -284,7 +284,7 @@ body{
 	width: 458px;
 }
 .input-size{
-	width: 500px;
+	width: 520px;
 }
 .select-size{
 	width: 520px;
@@ -347,20 +347,21 @@ body{
 	font-size: 19px;
 	color: #676767;
 }
-#si-item-cc, .si-list-crew, .si-list-actor, #si-item-ac, .si-list-movie, #si-item-mc{
+#si-item-cc, .si-list-crew, .si-list-actor, #si-item-ac, .si-list-movie, #si-item-mc, #si-item-countries, .si-list-country,
+#si-item-categories, .si-list-category{
 	padding: 0;
 	list-style: none;
 	margin-bottom: 15px;
 }
-.si-item-crew, .si-item-actor, .si-item-movie{
+.si-item-crew, .si-item-actor, .si-item-movie, .si-item-country, .si-item-category{
 	display: inline-block;
 }
-.si-item-crew-a, .si-item-actor-a, .si-item-movie-a{
+.si-item-crew-a, .si-item-actor-a, .si-item-movie-a, .si-item-country-a, .si-item-category-a{
 	margin-bottom: 15px;
 	text-align: center;
 	height: 34px;
 }
-.si-crew-ba, .si-actor-ba, .si-movie-ba{
+.si-crew-ba, .si-actor-ba, .si-movie-ba, .si-country-ba, .si-category-ba{
 	font-family: "Myriad","Arial",sans-serif;
 	font-size: 17px;
 	color: white;
@@ -371,12 +372,12 @@ body{
 	border: 1px solid #0b6900;
 	border-radius: 4px;
 }
-.si-item-crew-br, .si-item-actor-br, .si-item-movie-br{
+.si-item-crew-br, .si-item-actor-br, .si-item-movie-br, .si-item-country-br, .si-item-category-br{
 	float: right;
 	text-align: center;
 	height: 34px;
 }
-.si-crew-button, .si-actor-button, .si-movie-button{
+.si-crew-button, .si-actor-button, .si-movie-button, .si-country-button, .si-category-button{
 	font-family: "Myriad","Arial",sans-serif;
 	font-size: 17px;
 	color: white;
@@ -390,7 +391,7 @@ body{
 .form-input:focus + .si-form-help {
 	display: inline;
 }
-.form-input-crew, .form-input-actor, .form-input-movie{
+.form-input-crew, .form-input-movie{
 	padding-left: 20px;
 	height: 34px;
 	border: 1px solid #d6d6d6;

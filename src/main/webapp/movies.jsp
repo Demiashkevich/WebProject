@@ -7,8 +7,8 @@
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/basic.css">
-  <script type="text/javascript" src="js/functions.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+  <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>

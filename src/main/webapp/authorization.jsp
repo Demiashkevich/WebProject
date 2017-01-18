@@ -6,7 +6,7 @@
 <head>
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>

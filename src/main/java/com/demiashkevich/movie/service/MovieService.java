@@ -25,11 +25,11 @@ public class MovieService extends AbstractService<Movie, Integer> {
     @Override
     public boolean addItem(Movie movie) {
         MovieDAO movieDAO = new MovieDAO(connection);
-        if(validationStrategy.validate(movie)) {
+//        if(validationStrategy.validate(movie)) {
             movieDAO.addItem(movie);
             return true;
-        }
-        return false;
+//        }
+//        return false;
     }
 
     public List<Movie> findItems(int page, int count){
@@ -76,6 +76,14 @@ public class MovieService extends AbstractService<Movie, Integer> {
     public List<Movie> findItems(final int COUNT) {
         MovieDAO movieDAO = new MovieDAO(connection);
         return movieDAO.findSortByRating(COUNT);
+    }
+
+    public boolean updateItem(Movie movie){
+        MovieDAO  movieDAO = new MovieDAO(connection);
+        if(movieDAO.updateItem(movie)){
+            return true;
+        }
+        return false;
     }
 
     @Override

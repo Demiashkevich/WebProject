@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CategoryDAO extends AbstractDAO<Category> {
 
-    private static final String SELECT_ALL_CATEGORY = "select category.category_id, category.name FROM category";
+    private static final String SELECT_ALL_CATEGORY = "SELECT category.category_id, category.name FROM category";
     private static final String SELECT_CATEGORY_BY_MOVIE_ID = "SELECT category.category_id, category.name FROM category INNER JOIN category_movie ON category.category_id = category_movie.category_id WHERE category_movie.movie_id = ?";
 
     public CategoryDAO(ProxyConnection connection) {

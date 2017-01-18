@@ -21,7 +21,7 @@ public class ShowActorCommand implements Command{
             int actorId = Integer.parseInt(request.getParameter("actor_id"));
             ActorService actorService = new ActorService(connection);
             Actor actor = actorService.findItem(actorId);
-            request.setAttribute("actor", actor);
+            request.getSession(true).setAttribute("actor", actor);
         } finally {
             ConnectionPool.putConnection(connection);
         }

@@ -1,18 +1,17 @@
 //Function Create Movie
-var count = 0;
+
 function createItem(clone, put){
     var toClone = document.getElementById(clone);
     var clonedNode = toClone.cloneNode(true);
     var insertPoint = document.getElementById(put);
     insertPoint.appendChild(clonedNode);
-    count=count+1;
 }
-function removeItem(crew){
-    if(count > 0){
+function removeItem(crew, marker){
+    var count = document.getElementsByClassName(marker).length;
+    if(count > 1){
         var parent = crew.parentElement;
         var parentNext = parent.parentElement;
         parentNext.remove();
-        count=count-1;
     }
 }
 // Function Registration

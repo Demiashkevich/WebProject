@@ -18,7 +18,10 @@ public enum EnumCommand {
     DELETE_REVIEW( new DeleteReviewCommand() ),
     CHANGE_LANGUAGE( new ChangeLanguageCommand() ),
     EDIT_REVIEW( new EditReviewCommand() ),
-    UPDATE_REVIEW( new UpdateReviewCommand() );
+    UPDATE_REVIEW( new UpdateReviewCommand() ),
+    EDIT_MOVIE( new EditMovieCommand() ),
+    LOGOUT( new LogoutCommand() ),
+    UPDATE_MOVIE( new UpdateMovieCommand() );
 
     private Command command;
 

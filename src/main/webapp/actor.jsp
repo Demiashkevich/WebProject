@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="actor" scope="request" type="com.demiashkevich.movie.entity.Actor"/>
+<jsp:useBean id="actor" scope="session" type="com.demiashkevich.movie.entity.Actor"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
@@ -8,7 +8,7 @@
 <head>
     <title>Movie</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/basic.css">
+    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>

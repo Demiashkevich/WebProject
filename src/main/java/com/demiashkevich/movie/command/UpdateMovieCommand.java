@@ -8,9 +8,9 @@ import com.demiashkevich.movie.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ShowMovieCommand implements Command {
+public class UpdateMovieCommand extends AbstractActionMovieCommand {
 
-    private static final String PAGE_MOVIE = "path.page.movie";
+    private static final String PAGE_SUCCESS = "path.page.success";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -18,16 +18,15 @@ public class ShowMovieCommand implements Command {
         try {
             connection = ConnectionPool.takeConnection();
 
-            int movieId = Integer.parseInt(request.getParameter("movie_id"));
+            Movie movie = this.parseRequest(request);
             MovieService movieService = new MovieService(connection);
-            Movie movie = movieService.findItem(movieId);
-            request.getSession(true).setAttribute("movie", movie);
-            request.getSession(true).setAttribute("command", EnumCommand.SHOW_MOVIE.name());
-            request.getSession(true).setAttribute("movie_id", movieId);
+            if(movieService.updateItem(movie)){
+                return ConfigurationManager.getKey(PAGE_SUCCESS);
+            }
         } finally {
             ConnectionPool.putConnection(connection);
         }
-        return ConfigurationManager.getKey(PAGE_MOVIE);
+        return null;
     }
 
 }

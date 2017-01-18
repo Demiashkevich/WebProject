@@ -14,10 +14,10 @@
         <li class="gn-item gn-item-sign">
           <c:choose>
             <c:when test="${user != null}">
-              <a href=""><span class="gn-link-text">${user.firstName} ${user.lastName}</span></a>
+              <a href="personal-page.jsp"><span class="gn-link-text">${user.firstName} ${user.lastName}</span></a>
             </c:when>
             <c:otherwise>
-              <a href="authorization.jsp">
+              <a href="authorization.jsp?from=${pageContext.request.requestURI}">
                 <img src="images/sign.svg" alt="sign"/>
               </a>
             </c:otherwise>

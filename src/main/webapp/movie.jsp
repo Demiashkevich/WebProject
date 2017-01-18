@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="movie" scope="request" type="com.demiashkevich.movie.entity.Movie"/>
+<jsp:useBean id="movie" scope="session" type="com.demiashkevich.movie.entity.Movie"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
@@ -8,7 +8,7 @@
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/basic.css">
+  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
 </head>
 <body>
   <jsp:include page="global-header.jsp"/>
@@ -19,7 +19,7 @@
           <h1 class="sm-hc-title">${movie.title}</h1>
           <c:if test="${user.admin == true}">
             <div class="sm-hc-action">
-              <div class="sm-hc-button"><a href=""><fmt:message key="movie.action.edit"/></a></div>
+              <div class="sm-hc-button"><a href="movie?command=edit_movie"><fmt:message key="movie.action.edit"/></a></div>
               <div class="sm-hc-button"><a href="movie?command=delete_movie&movie_id=${movie.movieId}"><fmt:message key="movie.action.delete"/></a></div>
             </div>
           </c:if>
@@ -77,7 +77,7 @@
           <h1 class="sc-hc-title"><fmt:message key="movie.section.review.header"/></h1>
           <div class="sc-hc-action">
             <c:if test="${user != null}">
-              <div class="sc-hc-button"><a href="add_review.jsp?movie_id=${movie.movieId}&movie_title=${movie.title}&command_action=add_review"><fmt:message key="movie.action.add.review"/></a></div>
+              <div class="sc-hc-button"><a href="add-review.jsp?movie_id=${movie.movieId}&movie_title=${movie.title}&command_action=add_review"><fmt:message key="movie.action.add.review"/></a></div>
             </c:if>
           </div>
         </div>
