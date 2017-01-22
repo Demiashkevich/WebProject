@@ -15,7 +15,6 @@ public class ActorDAO extends AbstractDAO<Actor> {
     private static final String SELECT_ALL_ACTOR = "SELECT actor.actor_id, actor.first_name, actor.last_name, actor.photo FROM actor";
     private static final String SELECT_ACTOR_LIMIT = "SELECT actor.actor_id, actor.first_name, actor.last_name, actor.photo FROM actor LIMIT ?,?";
     private static final String SELECT_NUMBER_ROW_ACTOR = "SELECT COUNT(*) FROM actor";
-    private static final String SELECT_LIMIT_BY_RATING = "SELECT actor.actor_id, actor.first_name, actor.last_name, actor.photo FROM actor LIMIT ?";
     private static final String INSERT_ACTOR = "INSERT INTO actor(first_name, last_name, biography, photo) VALUES (?,?,?,?)";
     private static final String INSERT_ACTOR_MOVIE = "INSERT INTO movie_actor(movie_id, actor_id) VALUES (?,LAST_INSERT_ID())";
     private static final String DELETE_ACTOR = "DELETE FROM actor WHERE actor.actor_id = ?";
@@ -24,6 +23,34 @@ public class ActorDAO extends AbstractDAO<Actor> {
 
     public ActorDAO(ProxyConnection connection) {
         super(connection);
+    }
+
+    @Override
+    public List<Actor> findAllItems(){
+        return this.findAll(SELECT_ALL_ACTOR);
+    }
+
+    @Override
+    public List<Actor> findItems(final int FROM, final int COUNT){
+        return this.find(SELECT_ACTOR_LIMIT, FROM, COUNT);
+    }
+
+    @Override
+    public int findCountRecords(){
+        return this.findCountRow(SELECT_NUMBER_ROW_ACTOR);
+    }
+
+    @Override
+    public boolean deleteItem(final long ACTOR_ID){
+        return this.delete(DELETE_ACTOR, ACTOR_ID);
+    }
+
+    public List<Actor> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY){
+        return this.find(SELECT_ACTOR_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    public List<Actor> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY){
+        return this.find(SELECT_ACTOR_BY_ACTOR_ID, ACTOR_ID, OCCUPANCY);
     }
 
     @Override
@@ -88,38 +115,4 @@ public class ActorDAO extends AbstractDAO<Actor> {
         return true;
     }
 
-    @Override
-    public String getSelectItemAll() {
-        return SELECT_ALL_ACTOR;
-    }
-
-    @Override
-    protected String getSelectItemLimitByRating() {
-        return SELECT_LIMIT_BY_RATING;
-    }
-
-    @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_ACTOR_BY_MOVIE_ID;
-    }
-
-    @Override
-    protected String getSelectItemByActorId() {
-        return SELECT_ACTOR_BY_ACTOR_ID;
-    }
-
-    @Override
-    protected String getDeleteItemById() {
-        return DELETE_ACTOR;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return SELECT_ACTOR_LIMIT;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return SELECT_NUMBER_ROW_ACTOR;
-    }
 }

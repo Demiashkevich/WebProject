@@ -6,7 +6,7 @@
 <html>
 <head>
   <title></title>
-  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
   <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
@@ -133,7 +133,7 @@
         <li class="si-item">
           <button class="si-form-button" type="submit"><fmt:message key="edit.movie.action.add"/></button>
           <input type="hidden" value="update_movie" name="command">
-          <input type="hidden" value="${movie.movieId}" name="movieId">
+          <input type="hidden" value="${movie.movieId}" name="movie_id">
         </li>
       </ul>
     </form>

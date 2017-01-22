@@ -5,7 +5,7 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>
@@ -30,6 +30,7 @@
           <button class="dr-form-button" type="submit"><fmt:message key="create.review.add.review"/></button>
           <input type="hidden" value="${param.command_action}" name="command">
           <input type="hidden" value="${param.movie_id}" name="movie_id">
+          <input type="hidden" value="${param.user_id}" name="user_id">
         </li>
       </ul>
     </form>

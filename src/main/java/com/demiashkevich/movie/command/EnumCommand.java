@@ -2,6 +2,7 @@ package com.demiashkevich.movie.command;
 
 public enum EnumCommand {
 
+    EMPTY ( new EmptyCommand() ),
     SIGN_IN( new SignInCommand() ),
     SIGN_UP( new SignUpCommand() ),
     CREATE_MOVIE( new CreateMovieCommand() ),
@@ -21,7 +22,9 @@ public enum EnumCommand {
     UPDATE_REVIEW( new UpdateReviewCommand() ),
     EDIT_MOVIE( new EditMovieCommand() ),
     LOGOUT( new LogoutCommand() ),
-    UPDATE_MOVIE( new UpdateMovieCommand() );
+    UPDATE_MOVIE( new UpdateMovieCommand() ),
+    SHOW_USERS( new ShowUsersCommand() ),
+    EDIT_USER_STATUS( new EditUserStatusCommand() );
 
     private Command command;
 

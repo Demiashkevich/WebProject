@@ -15,11 +15,11 @@ public class MovieDAO extends AbstractDAO<Movie> {
     private static final String SELECT_MOVIE_LIMIT = "SELECT movie.movie_id, movie.title, movie.poster FROM movie LIMIT ?,?";
     private static final String SELECT_NUMBER_ROW_MOVIE = "SELECT COUNT(movie.movie_id) FROM movie";
     private static final String SELECT_MOVIE_LIMIT_BY_RATING = "SELECT movie.movie_id, movie.title, movie.poster FROM movie ORDER BY movie.rating DESC LIMIT ?";
-    private static final String INSERT_MOVIE = "INSERT INTO movie(title, date, description, length, poster) VALUES (?,?,?,?,?)";
-    private static final String INSERT_CATEGORY_MOVIE = "INSERT INTO category_movie(category_id, movie_id) VALUES (?, LAST_GENERATE_ID())";
-    private static final String INSERT_COUNTRY_MOVIE = "INSERT INTO movie_country(movie_id, country_id) VALUES (LAST_GENERATE_ID(),?)";
-    private static final String INSERT_PERSON_ROLE_MOVIE = "INSERT INTO movie_person_role(movie_id, person_id, role_id) VALUES (LAST_GENERATE_ID(),?,?";
-    private static final String INSERT_ACTOR_MOVIE = "INSERT INTO movie_actor(movie_id, actor_id) VALUES (LAST_GENERATE_ID(),?)";
+    private static final String INSERT_MOVIE = "INSERT INTO movie(title, date, description, length, poster, status) VALUES (?,?,?,?,?,?)";
+    private static final String INSERT_CATEGORY_MOVIE = "INSERT INTO category_movie(category_id, movie_id) VALUES (?, LAST_INSERT_ID())";
+    private static final String INSERT_COUNTRY_MOVIE = "INSERT INTO movie_country(movie_id, country_id) VALUES (LAST_INSERT_ID(),?)";
+    private static final String INSERT_PERSON_ROLE_MOVIE = "INSERT INTO movie_person_role(movie_id, person_id, role_id) VALUES (LAST_INSERT_ID(),?,?)";
+    private static final String INSERT_ACTOR_MOVIE = "INSERT INTO movie_actor(movie_id, actor_id) VALUES (LAST_INSERT_ID(),?)";
     private static final String DELETE_MOVIE = "UPDATE movie SET movie.status = 0 WHERE movie.movie_id = ?";
     private static final String SELECT_MOVIE_BY_MOVIE_ID = "SELECT movie.movie_id, movie.title, movie.date, movie.description, movie.length, movie.poster, movie.rating FROM movie WHERE movie.movie_id = ?";
     private static final String SELECT_MOVIE_BY_ACTOR_ID = "SELECT movie.movie_id, movie.title, movie.poster FROM movie INNER JOIN movie_actor ON movie.movie_id = movie_actor.movie_id WHERE movie_actor.actor_id = ?";
@@ -82,6 +82,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
                 statementMovie.setString(3, movie.getDescription());
                 statementMovie.setInt(4, movie.getLength());
                 statementMovie.setString(5, movie.getPoster());
+                statementMovie.setBoolean(6, true);
                 statementMovie.executeUpdate();
 
                 try(PreparedStatement statementCategory = connection.prepareStatement(INSERT_CATEGORY_MOVIE)) {
@@ -116,6 +117,40 @@ public class MovieDAO extends AbstractDAO<Movie> {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public List<Movie> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_MOVIE_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    @Override
+    public List<Movie> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_MOVIE_BY_ACTOR_ID, ACTOR_ID, OCCUPANCY);
+    }
+
+    @Override
+    public List<Movie> findAllItems() {
+        return this.findAll(SELECT_MOVIE_ALL);
+    }
+
+    @Override
+    public List<Movie> findItems(final int FROM, final int COUNT) {
+        return this.find(SELECT_MOVIE_LIMIT, FROM, COUNT);
+    }
+
+    @Override
+    public int findCountRecords() {
+        return this.findCountRow(SELECT_NUMBER_ROW_MOVIE);
+    }
+
+    @Override
+    public boolean deleteItem(final long MOVIE_ID) {
+        return this.delete(DELETE_MOVIE, MOVIE_ID);
+    }
+
+    public List<Movie> findItemsSortByRating(final int COUNT) {
+        return this.find(SELECT_MOVIE_LIMIT_BY_RATING, COUNT, false);
     }
 
     public boolean updateItem(Movie movie){
@@ -169,41 +204,6 @@ public class MovieDAO extends AbstractDAO<Movie> {
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public String getSelectItemAll() {
-        return SELECT_MOVIE_ALL;
-    }
-
-    @Override
-    protected String getSelectItemLimitByRating() {
-        return SELECT_MOVIE_LIMIT_BY_RATING;
-    }
-
-    @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_MOVIE_BY_MOVIE_ID;
-    }
-
-    @Override
-    protected String getSelectItemByActorId() {
-        return SELECT_MOVIE_BY_ACTOR_ID;
-    }
-
-    @Override
-    protected String getDeleteItemById() {
-        return DELETE_MOVIE;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return SELECT_MOVIE_LIMIT;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return SELECT_NUMBER_ROW_MOVIE;
     }
 
 }

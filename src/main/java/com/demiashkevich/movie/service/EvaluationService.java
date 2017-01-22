@@ -4,45 +4,24 @@ import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.dao.EvaluationDAO;
 import com.demiashkevich.movie.entity.Evaluation;
 
-import java.util.List;
-
-public class EvaluationService extends AbstractService<Evaluation, Integer> {
+public class EvaluationService extends AbstractService {
 
     public EvaluationService(ProxyConnection connection) {
         super(connection);
     }
 
-    @Override
-    public List<Evaluation> findAllItem() {
-        return null;
-    }
-
-    @Override
-    public boolean addItem(Evaluation item) {
+    public boolean addEvaluation(Evaluation item) {
         EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
-        if(evaluationDAO.addItem(item)){
-            evaluationDAO.updateRating(item);
-            return true;
+        if(!evaluationDAO.checkExistEvaluation(item.getMovie().getMovieId(), item.getUser().getUserId())) {
+            if (evaluationDAO.addItem(item)) {
+                evaluationDAO.updateRating(item);
+                return true;
+            }
         }
         return false;
     }
 
-    @Override
-    public Evaluation findItem(Integer key) {
-        return null;
-    }
-
-    @Override
-    public List<Evaluation> findItems(int COUNT) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteItem(long itemId) {
-        return false;
-    }
-
-    public boolean updateItem(Evaluation evaluation){
+    public boolean updateEvaluation(Evaluation evaluation){
         EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
         if(evaluationDAO.updateItem(evaluation)){
             evaluationDAO.updateRating(evaluation);
@@ -51,7 +30,7 @@ public class EvaluationService extends AbstractService<Evaluation, Integer> {
         return false;
     }
 
-    public boolean deleteItem(long userId, long movieId){
+    public boolean deleteEvaluation(long userId, long movieId){
         EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
         if(evaluationDAO.deleteItem(userId, movieId)) {
             evaluationDAO.updateRating(movieId);

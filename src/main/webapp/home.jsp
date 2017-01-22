@@ -6,7 +6,7 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>
@@ -16,7 +16,7 @@
             <div class="sm-hc"><!--Header Context-->
                 <h1 class="sm-hc-title"><fmt:message key="home.section.movie.header"/></h1>
                 <ul class="sm-hc-action">
-                    <c:if test="${user.admin == true}">
+                    <c:if test="${user.admin}">
                         <li class="sm-hc-button"><a href="movie?command=create_movie"><fmt:message key="home.section.movie.action.add"/></a></li>
                     </c:if>
                     <li class="sm-hc-button"><a href="movie?command=show_movies&currentPage=1"><fmt:message key="home.section.movie.action.view"/></a></li>
@@ -42,7 +42,7 @@
             <div class="sa-hc"><!--Header Context-->
                 <h1 class="sa-hc-title"><fmt:message key="home.section.actor.header"/></h1>
                 <ul class="sa-hc-action">
-                    <c:if test="${user.admin == true}">
+                    <c:if test="${user.admin}">
                         <li class="sa-hc-button"><a href="movie?command=create_actor"><fmt:message key="home.section.actor.action.add"/></a></li>
                     </c:if>
                     <li class="sa-hc-button"><a href="movie?command=show_actors&currentPage=1"><fmt:message key="home.section.actor.action.view"/></a></li>

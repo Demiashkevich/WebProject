@@ -1,13 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="custom" uri="http://demiashkevich.com/jsp/tlds/pagination"%>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>
@@ -37,26 +38,13 @@
       </ul>
     </div>
     <div class="pagination-context">
-      <c:if test="${currentPage != 1}">
-        <a class="pagination-link" href="movie?command=show_actors&currentPage=${currentPage - 1}"><fmt:message key="actors.section.pagination.previous"/></a>
-      </c:if>
-      <table>
-        <tr>
-          <c:forEach begin="1" end="${countPage}" var="i">
-            <c:choose>
-              <c:when test="${currentPage == i}">
-                <td class="pagination-cp">${i}</td>
-              </c:when>
-              <c:otherwise>
-                <td><a class="pagination-link-page" href="movie?command=show_actors&currentPage=${i}">${i}</a></td>
-              </c:otherwise>
-            </c:choose>
-          </c:forEach>
-        </tr>
-      </table>
-      <c:if test="${countPage != 1 && currentPage != countPage + 1}">
-        <a class="pagination-link" href="movie?command=show_actors&currentPage=${currentPage + 1}"><fmt:message key="actors.section.pagination.next"/></a>
-      </c:if>
+      <custom:pag-previous currentPage="${currentPage}">
+        <fmt:message key="movies.section.pagination.previous"/>
+      </custom:pag-previous>
+      <custom:pag-body currentPage="${currentPage}" countPage="${countPage}"/>
+      <custom:pag-next  currentPage="${currentPage}" countPage="${countPage}">
+        <fmt:message key="movies.section.pagination.next"/>
+      </custom:pag-next>
     </div>
   </section>
 </main>

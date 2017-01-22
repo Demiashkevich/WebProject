@@ -20,7 +20,7 @@ public class CreateActorCommand implements Command {
             connection = ConnectionPool.takeConnection();
 
             MovieService movieService = new MovieService(connection);
-            List<Movie> movies = movieService.findAllItem();
+            List<Movie> movies = movieService.findAllMovies();
             request.setAttribute("movies", movies);
 
             return ConfigurationManager.getKey(PAGE_CREATE_ACTOR);

@@ -8,7 +8,7 @@
 <head>
     <title>Movie</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>
@@ -18,8 +18,9 @@
             <div class="sa-hc"><!--Header Context-->
                 <h1 class="sa-hc-title">${actor.firstName} ${actor.lastName}</h1>
                 <div class="sa-hc-action">
-                    <div class="sa-hc-button"><a href=""><fmt:message key="actor.action.edit"/></a></div>
-                    <div class="sa-hc-button"><a href="movie?command=delete_actor&actor_id=${actor.actorId}"><fmt:message key="actor.action.delete"/></a></div>
+                    <c:if test="${user.admin}">
+                        <div class="sa-hc-button"><a href="movie?command=delete_actor&actor_id=${actor.actorId}"><fmt:message key="actor.action.delete"/></a></div>
+                    </c:if>
                 </div>
             </div>
         </header>

@@ -4,9 +4,12 @@ import com.demiashkevich.movie.connection.ConnectionPool;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Actor;
 import com.demiashkevich.movie.manager.ConfigurationManager;
+import com.demiashkevich.movie.memento.RequestParameter;
+import com.demiashkevich.movie.memento.RequestParameterList;
 import com.demiashkevich.movie.service.ActorService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class ShowActorsCommand implements Command {
@@ -23,11 +26,19 @@ public class ShowActorsCommand implements Command {
             int currentPage = Integer.parseInt(request.getParameter("currentPage"));
             ActorService actorService = new ActorService(connection);
             int countPage = actorService.countPage(ACTOR_COUNT);
-            List<Actor> actors = actorService.findItems(currentPage, ACTOR_COUNT);
+            List<Actor> actors = actorService.findActors(currentPage, ACTOR_COUNT);
 
             request.setAttribute("actors", actors);
-            request.setAttribute("currentPage", currentPage);
             request.setAttribute("countPage", countPage);
+            request.setAttribute("currentPage", currentPage);
+
+            HttpSession session = request.getSession();
+            RequestParameter requestParameter = new RequestParameter();
+            requestParameter.put("currentPage", String.valueOf(currentPage));
+            requestParameter.setCommand(EnumCommand.SHOW_ACTORS);
+            RequestParameterList parameters = RequestParameterList.getInstance();
+            parameters.offerLast(requestParameter);
+            session.setAttribute("parameters", parameters);
         } finally {
             ConnectionPool.putConnection(connection);
         }

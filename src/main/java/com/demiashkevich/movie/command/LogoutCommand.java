@@ -6,12 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 
 public class LogoutCommand implements Command {
 
-    private static final String PAGE_HOME = "path.page.home";
+    private static final String PAGE_SUCCESS = "path.page.success";
 
     @Override
     public String execute(HttpServletRequest request) {
-        request.getSession(true).invalidate();
-        return ConfigurationManager.getKey(PAGE_HOME);
+        request.getSession(true).removeAttribute("user");
+        return ConfigurationManager.getKey(PAGE_SUCCESS);
     }
 
 }

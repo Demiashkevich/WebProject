@@ -31,4 +31,20 @@ public class Country extends Entity {
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Country)) return false;
+
+        Country country = (Country) o;
+
+        return countryId == country.countryId;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return countryId;
+    }
 }

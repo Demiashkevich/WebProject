@@ -3,14 +3,13 @@ package com.demiashkevich.movie.service;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.dao.ActorDAO;
 import com.demiashkevich.movie.dao.MovieDAO;
-import com.demiashkevich.movie.entity.Actor;
-import com.demiashkevich.movie.entity.Movie;
+import com.demiashkevich.movie.entity.*;
 import com.demiashkevich.movie.validation.ActorValidationStrategy;
 import com.demiashkevich.movie.validation.ValidationStrategy;
 
 import java.util.List;
 
-public class ActorService extends AbstractService<Actor, Integer> {
+public class ActorService extends AbstractService {
 
     private ValidationStrategy<Actor> validationStrategy;
 
@@ -19,35 +18,33 @@ public class ActorService extends AbstractService<Actor, Integer> {
         validationStrategy = new ActorValidationStrategy();
     }
 
-    @Override
-    public List<Actor> findAllItem() {
-        return new ActorDAO(connection).findAll();
+    public List<Actor> findAllActors() {
+        return new ActorDAO(connection).findAllItems();
     }
 
-    @Override
-    public boolean addItem(Actor actor) {
+    public boolean addActor(Actor actor) {
+        Actor actorResult = this.parseMovieParameters(actor);
         ActorDAO actorDAO = new ActorDAO(this.connection);
 //        if(validationStrategy.validate(actor)) {
-            actorDAO.addItem(actor);
+            actorDAO.addItem(actorResult);
             return true;
 //        }
 //        return false;
     }
 
-    public List<Actor> findItems(int page, int count){
+    public List<Actor> findActors(int page, int count){
         int from = (page - 1)*count;
         ActorDAO actorDAO = new ActorDAO(connection);
-        return actorDAO.find(from, count);
+        return actorDAO.findItems(from, count);
     }
 
     public int countPage(int countActor){
         ActorDAO actorDAO = new ActorDAO(connection);
-        int records = actorDAO.findCountRow();
+        int records = actorDAO.findCountRecords();
         return (int)Math.ceil((double)records / countActor);
     }
 
-    @Override
-    public Actor findItem(Integer actorId) {
+    public Actor findActor(Integer actorId) {
         ActorDAO actorDAO = new ActorDAO(connection);
         Actor actor = actorDAO.findItemsByActorId(actorId, FULL_OCCUPANCY).get(0);
 
@@ -58,17 +55,21 @@ public class ActorService extends AbstractService<Actor, Integer> {
         return actor;
     }
 
-    @Override
-    public List<Actor> findItems(final int COUNT) {
+    public List<Actor> findActors(int count) {
         ActorDAO actorDAO = new ActorDAO(connection);
-        return actorDAO.findSortByRating(COUNT);
+        return actorDAO.findItems(0, count);
     }
 
-    @Override
-    public boolean deleteItem(long itemId) {
+    public boolean deleteActor(long itemId) {
         ActorDAO actorDAO = new ActorDAO(connection);
         actorDAO.deleteItem(itemId);
         return true;
+    }
+
+    private Actor parseMovieParameters(Actor actor){
+        List<Movie> movies = this.containListItems(actor.getMovies());
+        actor.setMovies(movies);
+        return actor;
     }
 
 }

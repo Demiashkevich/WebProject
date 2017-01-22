@@ -17,10 +17,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
         this.connection = connection;
     }
 
-    @Override
-    public List<T> findAll() {
+    List<T> findAll(final String REQUEST){
         List<T> list = null;
-        try(PreparedStatement statement = connection.prepareStatement(getSelectItemAll());
+        try(PreparedStatement statement = connection.prepareStatement(REQUEST);
             ResultSet resultSet = statement.executeQuery()){
             list = this.parseResultSetLazy(resultSet);
         } catch (SQLException e) {
@@ -29,10 +28,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
         return list;
     }
 
-    @Override
-    public List<T> find(final int FROM, final int COUNT){
+    List<T> find(final String REQUEST, final int FROM, final int COUNT){
         List<T> items = new ArrayList<>();
-        try(PreparedStatement statement = connection.prepareStatement(getSelectItemLimit())){
+        try(PreparedStatement statement = connection.prepareStatement(REQUEST)){
             statement.setInt(1, FROM);
             statement.setInt(2, COUNT);
             ResultSet resultSet = statement.executeQuery();
@@ -43,9 +41,8 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
         return items;
     }
 
-    @Override
-    public int findCountRow(){
-        try(PreparedStatement statement = connection.prepareStatement(getSelectNumberRowItem())){
+    int findCountRow(String REQUEST){
+        try(PreparedStatement statement = connection.prepareStatement(REQUEST)){
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()) {
                 return resultSet.getInt(1);
@@ -56,23 +53,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
         return 0;
     }
 
-    @Override
-    public List<T> findSortByRating(final int COUNT) {
-        return this.findWithParameters(COUNT, getSelectItemLimitByRating(), false);
-    }
-
-    public List<T> findItemsByMovieId(long movieId, boolean occupancy){
-        return this.findWithParameters(movieId, getSelectItemByMovieId(), occupancy);
-    }
-
-    public List<T> findItemsByActorId(long actorId, boolean occupancy){
-        return this.findWithParameters(actorId, getSelectItemByActorId(), occupancy);
-    }
-
-    @Override
-    public boolean deleteItem(long itemId){
-        try(PreparedStatement statement = connection.prepareStatement(getDeleteItemById())) {
-            statement.setLong(1, itemId);
+    boolean delete(final String REQUEST, final long ITEM_ID){
+        try(PreparedStatement statement = connection.prepareStatement(REQUEST)) {
+            statement.setLong(1, ITEM_ID);
             statement.executeUpdate();
             return true;
         } catch (SQLException e){
@@ -81,12 +64,12 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
         return false;
     }
 
-    private List<T> findWithParameters(long count, String request, boolean occupancy) {
+    List<T> find(final String REQUEST, final long COUNT, boolean OCCUPANCY) {
         List<T> items = null;
-        try(PreparedStatement statement = connection.prepareStatement(request)) {
-            statement.setLong(1, count);
+        try(PreparedStatement statement = connection.prepareStatement(REQUEST)) {
+            statement.setLong(1, COUNT);
             try(ResultSet resultSet = statement.executeQuery()){
-                if(occupancy) {
+                if(OCCUPANCY) {
                     items = parseResultSetFull(resultSet);
                 } else {
                     items = parseResultSetLazy(resultSet);
@@ -99,16 +82,12 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
     }
 
     public abstract boolean addItem(T item);
+    public abstract List<T> findAllItems();
+    public abstract List<T> findItems(final int FROM, final int COUNT);
+    public abstract int findCountRecords();
+    public abstract boolean deleteItem(final long ITEM_ID);
 
-    protected abstract List<T> parseResultSetFull(ResultSet resultSet);
-    protected abstract List<T> parseResultSetLazy(ResultSet resultSet);
-
-    protected abstract String getSelectItemAll();
-    protected abstract String getSelectItemLimitByRating();
-    protected abstract String getSelectItemByMovieId();
-    protected abstract String getSelectItemByActorId();
-    protected abstract String getDeleteItemById();
-    protected abstract String getSelectItemLimit();
-    protected abstract String getSelectNumberRowItem();
+    abstract List<T> parseResultSetFull(ResultSet resultSet);
+    abstract List<T> parseResultSetLazy(ResultSet resultSet);
 
 }

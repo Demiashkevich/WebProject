@@ -1,6 +1,6 @@
 package com.demiashkevich.movie.controller;
 
-import com.demiashkevich.movie.ActionCommand;
+import com.demiashkevich.movie.factory.ActionCommand;
 import com.demiashkevich.movie.command.Command;
 
 import javax.servlet.RequestDispatcher;

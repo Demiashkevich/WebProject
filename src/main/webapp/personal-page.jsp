@@ -3,7 +3,7 @@
 <html>
 <head>
   <title></title>
-  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>

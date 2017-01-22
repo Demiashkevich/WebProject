@@ -6,34 +6,14 @@ import com.demiashkevich.movie.entity.Role;
 
 import java.util.List;
 
-public class RoleService extends AbstractService<Role, Integer> {
+public class RoleService extends AbstractService {
 
     public RoleService(ProxyConnection connection) {
         super(connection);
     }
 
-    @Override
-    public List<Role> findAllItem() {
-        return new RoleDAO(connection).findAll();
+    public List<Role> findAllRoles() {
+        return new RoleDAO(connection).findAllItems();
     }
 
-    @Override
-    public boolean addItem(Role item) {
-        return false;
-    }
-
-    @Override
-    public Role findItem(Integer key) {
-        return null;
-    }
-
-    @Override
-    public List<Role> findItems(int COUNT) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteItem(long itemId) {
-        return false;
-    }
 }

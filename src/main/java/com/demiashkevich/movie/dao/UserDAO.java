@@ -6,6 +6,7 @@ import com.demiashkevich.movie.entity.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User>{
@@ -13,6 +14,8 @@ public class UserDAO extends AbstractDAO<User>{
     private static final String SELECT_USER = "SELECT user.user_id, user.password, user.first_name, user.last_name, user.email, user.photo, user.admin, user.status FROM user WHERE user.email = ? LIMIT 1";
     private static final String INSERT_CREATE_ACCOUNT = "INSERT INTO user(password, first_name, last_name, email, photo, admin, status) VALUES (?,?,?,?,?,?,?)";
     private static final String DELETE_USER = "DELETE FROM user WHERE user.user_id = ?";
+    private static final String SELECT_ALL_USER = "SELECT user.user_id, user.first_name, user.last_name, user.status FROM user WHERE user.admin = 0";
+    private static final String UPDATE_USER_STATUS = "UPDATE user SET user.status = ? WHERE user.user_id = ?";
 
     public UserDAO(ProxyConnection connection) {
         super(connection);
@@ -41,6 +44,18 @@ public class UserDAO extends AbstractDAO<User>{
         return null;
     }
 
+    public boolean updateStatusUser(final int USER_ID, final boolean STATUS){
+        try(PreparedStatement statement = connection.prepareStatement(UPDATE_USER_STATUS)){
+            statement.setBoolean(1, STATUS);
+            statement.setInt(2, USER_ID);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public boolean addItem(User user){
         try(PreparedStatement statement = connection.prepareStatement(INSERT_CREATE_ACCOUNT)){
@@ -59,48 +74,56 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
+    public List<User> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return null;
+    }
+
+    @Override
+    public List<User> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
+        return null;
+    }
+
+    @Override
+    public List<User> findAllItems() {
+        return this.findAll(SELECT_ALL_USER);
+    }
+
+    @Override
+    public List<User> findItems(final int FROM, final int COUNT) {
+        return null;
+    }
+
+    @Override
+    public int findCountRecords() {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteItem(final long USER_ID) {
+        return delete(DELETE_USER, USER_ID);
+    }
+
+    @Override
      protected List<User> parseResultSetFull(ResultSet resultSet) {
         return null;
     }
 
     @Override
     protected List<User> parseResultSetLazy(ResultSet resultSet) {
-        return null;
-    }
-
-    @Override
-    public String getSelectItemAll() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemLimitByRating() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemByMovieId() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemByActorId() {
-        return null;
-    }
-
-    @Override
-    protected String getDeleteItemById() {
-        return DELETE_USER;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
+        List<User> users = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                User user = new User();
+                user.setUserId(resultSet.getInt(1));
+                user.setFirstName(resultSet.getString(2));
+                user.setLastName(resultSet.getString(3));
+                user.setStatus(resultSet.getBoolean(4));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
 }

@@ -48,4 +48,23 @@ public class Evaluation extends Entity {
         this.movie = movie;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Evaluation)) return false;
+
+        Evaluation that = (Evaluation) o;
+
+        if (movie != null ? !movie.equals(that.movie) : that.movie != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = user != null ? user.hashCode() : 0;
+        result = 31 * result + (movie != null ? movie.hashCode() : 0);
+        return result;
+    }
 }

@@ -18,11 +18,6 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    public boolean addItem(Category item) {
-        return false;
-    }
-
-    @Override
     protected List<Category> parseResultSetFull(ResultSet resultSet) {
         return null;
     }
@@ -44,37 +39,38 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    protected String getSelectItemAll() {
-        return SELECT_ALL_CATEGORY;
+    public boolean addItem(Category item) {
+        return false;
     }
 
     @Override
-    protected String getSelectItemLimitByRating() {
+    public List<Category> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_CATEGORY_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    @Override
+    public List<Category> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
         return null;
     }
 
     @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_CATEGORY_BY_MOVIE_ID;
+    public List<Category> findAllItems() {
+        return this.findAll(SELECT_ALL_CATEGORY);
     }
 
     @Override
-    protected String getSelectItemByActorId() {
+    public List<Category> findItems(final int FROM, final int COUNT) {
         return null;
     }
 
     @Override
-    protected String getDeleteItemById() {
-        return null;
+    public int findCountRecords() {
+        return 0;
     }
 
     @Override
-    protected String getSelectItemLimit() {
-        return null;
+    public boolean deleteItem(final long ACTOR_ID) {
+        return false;
     }
 
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
-    }
 }

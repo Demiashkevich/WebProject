@@ -23,6 +23,36 @@ public class CountryDAO extends AbstractDAO<Country> {
     }
 
     @Override
+    public List<Country> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_COUNTRY_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    @Override
+    public List<Country> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
+        return null;
+    }
+
+    @Override
+    public List<Country> findAllItems() {
+        return this.findAll(SELECT_ALL_COUNTY);
+    }
+
+    @Override
+    public List<Country> findItems(final int FROM, final int COUNT) {
+        return null;
+    }
+
+    @Override
+    public int findCountRecords() {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteItem(final long COUNTRY_ID) {
+        return false;
+    }
+
+    @Override
     protected List<Country> parseResultSetFull(ResultSet resultSet) {
         return null;
     }
@@ -41,41 +71,6 @@ public class CountryDAO extends AbstractDAO<Country> {
             exception.printStackTrace();
         }
         return countries;
-    }
-
-    @Override
-    protected String getSelectItemAll() {
-        return SELECT_ALL_COUNTY;
-    }
-
-    @Override
-    protected String getSelectItemLimitByRating() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_COUNTRY_BY_MOVIE_ID;
-    }
-
-    @Override
-    protected String getSelectItemByActorId() {
-        return null;
-    }
-
-    @Override
-    protected String getDeleteItemById() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
     }
 
 }

@@ -27,7 +27,7 @@ public class SignUpCommand implements Command{
             user.setLastName(request.getParameter("last_name"));
 
             UserService userService = new UserService(connection);
-            if (userService.addItem(user)) {
+            if (userService.addUser(user)) {
                 return ConfigurationManager.getKey(PATH_AUTHORIZATION);
             } else {
                 request.setAttribute("password", user.getPassword());

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UpdateReviewCommand implements Command {
 
     private static final String PAGE_SUCCESS = "path.page.success";
+    private static final String PAGE_ERROR = "path.page.error";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -27,16 +28,19 @@ public class UpdateReviewCommand implements Command {
             Movie movie = new Movie();
             movie.setMovieId(Integer.parseInt(request.getParameter("movie_id")));
             evaluation.setMovie(movie);
-            evaluation.setUser((User)request.getSession().getAttribute("user"));
+            User user = new User();
+            user.setUserId(Integer.parseInt(request.getParameter("user_id")));
+            evaluation.setUser(user);
 
             EvaluationService evaluationService = new EvaluationService(connection);
-            if(evaluationService.updateItem(evaluation)){
+            if(evaluationService.updateEvaluation(evaluation)){
                 return ConfigurationManager.getKey(PAGE_SUCCESS);
+            } else {
+                return ConfigurationManager.getKey(PAGE_ERROR);
             }
         } finally {
             ConnectionPool.putConnection(connection);
         }
-        return null;
     }
 
 }

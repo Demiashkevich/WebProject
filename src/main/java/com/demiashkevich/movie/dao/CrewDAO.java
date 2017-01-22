@@ -19,11 +19,6 @@ public class CrewDAO extends AbstractDAO<Crew> {
     }
 
     @Override
-    public boolean addItem(Crew item) {
-        return false;
-    }
-
-    @Override
     protected List<Crew> parseResultSetFull(ResultSet resultSet) {
         List<Crew> crews = new ArrayList<>();
         try {
@@ -62,37 +57,38 @@ public class CrewDAO extends AbstractDAO<Crew> {
     }
 
     @Override
-    protected String getSelectItemAll() {
-        return SELECT_ALL_CREW;
+    public boolean addItem(Crew item) {
+        return false;
     }
 
     @Override
-    protected String getSelectItemLimitByRating() {
+    public List<Crew> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_CREW_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    @Override
+    public List<Crew> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
         return null;
     }
 
     @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_CREW_BY_MOVIE_ID;
+    public List<Crew> findAllItems() {
+        return this.findAll(SELECT_ALL_CREW);
     }
 
     @Override
-    protected String getSelectItemByActorId() {
+    public List<Crew> findItems(final int FROM, final int COUNT) {
         return null;
     }
 
     @Override
-    protected String getDeleteItemById() {
-        return null;
+    public int findCountRecords() {
+        return 0;
     }
 
     @Override
-    protected String getSelectItemLimit() {
-        return null;
+    public boolean deleteItem(final long CREW_ID) {
+        return false;
     }
 
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
-    }
 }

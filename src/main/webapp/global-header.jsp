@@ -10,7 +10,9 @@
         <li class="gn-item"><a href="movie"><span class="gn-link-text"><fmt:message key="gn.home"/></span></a></li>
         <li class="gn-item"><a href="movie?command=show_movies&currentPage=1"><span class="gn-link-text"><fmt:message key="gn.movies"/></span></a></li>
         <li class="gn-item"><a href="movie?command=show_actors&currentPage=1"><span class="gn-link-text"><fmt:message key="gn.actors"/></span></a></li>
-        <li class="gn-item gn-item-search"><a href="#"><img src="images/search.svg" alt="search"></a></li>
+        <c:if test="${user.admin}">
+          <li class="gn-item"><a href="movie?command=show_users"><span class="gn-link-text"><fmt:message key="gn.users"/></span></a></li>
+        </c:if>
         <li class="gn-item gn-item-sign">
           <c:choose>
             <c:when test="${user != null}">

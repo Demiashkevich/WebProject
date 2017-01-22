@@ -1,23 +1,43 @@
 package com.demiashkevich.movie.command;
 
+import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.*;
+import com.demiashkevich.movie.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractActionCommand implements Command {
+public abstract class AbstractActionMovieCommand implements Command {
 
     @Override
     public abstract String execute(HttpServletRequest request);
 
-    public Movie parseRequest(HttpServletRequest request) {
+    protected void fillRequest(HttpServletRequest request, ProxyConnection connection){
+        CategoryService categoryService = new CategoryService(connection);
+        List<Category> categories = categoryService.findAllCategories();
+        request.setAttribute("categories", categories);
+
+        CountryService countryService = new CountryService(connection);
+        List<Country> countries = countryService.findAllCountries();
+        request.setAttribute("countries", countries);
+
+        ActorService actorService = new ActorService(connection);
+        List<Actor> actors = actorService.findAllActors();
+        request.setAttribute("actors", actors);
+
+        CrewService crewService = new CrewService(connection);
+        List<Crew> crews = crewService.findAllCrews();
+        request.setAttribute("crews", crews);
+
+        RoleService roleService = new RoleService(connection);
+        List<Role> roles = roleService.findAllRoles();
+        request.setAttribute("roles", roles);
+    }
+
+    protected Movie parseRequest(HttpServletRequest request) {
         Movie movie = new Movie();
-        String movie_id = request.getParameter("movie_id");
-        if(movie_id != null){
-            movie.setMovieId(Long.parseLong(movie_id));
-        }
         movie.setTitle(request.getParameter("title"));
         movie.setDate(Date.valueOf(request.getParameter("date")));
         movie.setDescription(request.getParameter("description"));
@@ -83,4 +103,5 @@ public abstract class AbstractActionCommand implements Command {
         }
         return actors;
     }
+
 }

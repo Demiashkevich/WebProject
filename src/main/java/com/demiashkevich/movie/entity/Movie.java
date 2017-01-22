@@ -113,4 +113,21 @@ public class Movie extends Entity {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Movie)) return false;
+
+        Movie movie = (Movie) o;
+
+        if (movieId != movie.movieId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (movieId ^ (movieId >>> 32));
+    }
 }

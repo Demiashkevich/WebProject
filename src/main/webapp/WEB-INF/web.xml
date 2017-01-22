@@ -8,4 +8,11 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://demiashkevich.com/jsp/tlds/pagination</taglib-uri>
+            <taglib-location>WEB-INF/tld/pagination.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
 </web-app>

@@ -8,7 +8,7 @@
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <body>
   <jsp:include page="global-header.jsp"/>
@@ -90,7 +90,11 @@
               <ul class="sr-hc-action">
                 <li class="sr-hc-button"><div class="r-mark">${evaluation.rating}</div></li>
                 <c:if test="${user.userId == evaluation.user.userId || user.admin == true}">
-                  <li class="sr-hc-button"><a href="movie?command=edit_review&command_action=update_review&title=${evaluation.title}&comment=${evaluation.comment}&rating=${evaluation.rating}&movie_id=${movie.movieId}&movie_title=${movie.title}"><fmt:message key="movie.action.edit"/></a></li>
+                  <li class="sr-hc-button">
+                    <a href="movie?command=edit_review&command_action=update_review&title=${evaluation.title}&comment=${evaluation.comment}&rating=${evaluation.rating}&movie_id=${movie.movieId}&movie_title=${movie.title}&user_id=${evaluation.user.userId}">
+                      <fmt:message key="movie.action.edit"/>
+                    </a>
+                  </li>
                   <li class="sr-hc-button"><a href="movie?command=delete_review&movie_id=${movie.movieId}&user_id=${evaluation.user.userId}"><fmt:message key="movie.action.delete"/></a></li>
                 </c:if>
               </ul>

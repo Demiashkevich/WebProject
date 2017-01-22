@@ -8,7 +8,7 @@ import com.demiashkevich.movie.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class AddMovieCommand extends AbstractActionCommand {
+public class AddMovieCommand extends AbstractActionMovieCommand {
 
     private static final String PATH_SUCCESS = "path.page.success";
     private static final String PATH_ADD_MOVIE = "path.page.add_movie";
@@ -22,7 +22,7 @@ public class AddMovieCommand extends AbstractActionCommand {
 
             Movie movie = this.parseRequest(request);
             MovieService movieService = new MovieService(connection);
-            if (movieService.addItem(movie)) {
+            if (movieService.addMovie(movie)) {
                 return ConfigurationManager.getKey(PATH_SUCCESS);
             } else {
                 request.setAttribute("error_message", ERROR_MESSAGE);

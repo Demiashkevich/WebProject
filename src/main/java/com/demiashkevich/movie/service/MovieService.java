@@ -8,7 +8,7 @@ import com.demiashkevich.movie.validation.ValidationStrategy;
 
 import java.util.List;
 
-public class MovieService extends AbstractService<Movie, Integer> {
+public class MovieService extends AbstractService {
 
     private ValidationStrategy<Movie> validationStrategy;
 
@@ -17,35 +17,33 @@ public class MovieService extends AbstractService<Movie, Integer> {
         validationStrategy = new MovieValidationStrategy();
     }
 
-    @Override
-    public List<Movie> findAllItem() {
-        return new MovieDAO(connection).findAll();
+    public List<Movie> findAllMovies() {
+        return new MovieDAO(connection).findAllItems();
     }
 
-    @Override
-    public boolean addItem(Movie movie) {
+    public boolean addMovie(Movie movie) {
+        Movie movieResult = this.parseMovieParameters(movie);
         MovieDAO movieDAO = new MovieDAO(connection);
 //        if(validationStrategy.validate(movie)) {
-            movieDAO.addItem(movie);
+            movieDAO.addItem(movieResult);
             return true;
 //        }
 //        return false;
     }
 
-    public List<Movie> findItems(int page, int count){
+    public List<Movie> findMovies(int page, int count){
         int from = (page - 1)*count;
         MovieDAO movieDAO = new MovieDAO(connection);
-        return movieDAO.find(from, count);
+        return movieDAO.findItems(from, count);
     }
 
     public int countPage(int countMovie){
         MovieDAO movieDAO = new MovieDAO(connection);
-        int records = movieDAO.findCountRow();
+        int records = movieDAO.findCountRecords();
         return (int)Math.ceil((double)records / countMovie);
     }
 
-    @Override
-    public Movie findItem(Integer movieId) {
+    public Movie findMovie(Integer movieId) {
         MovieDAO movieDAO = new MovieDAO(connection);
         Movie movie = movieDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY).get(0);
 
@@ -72,25 +70,36 @@ public class MovieService extends AbstractService<Movie, Integer> {
         return movie;
     }
 
-    @Override
-    public List<Movie> findItems(final int COUNT) {
+    public List<Movie> findMovies(int count) {
         MovieDAO movieDAO = new MovieDAO(connection);
-        return movieDAO.findSortByRating(COUNT);
+        return movieDAO.findItemsSortByRating(count);
     }
 
-    public boolean updateItem(Movie movie){
+    public boolean updateMovie(Movie movie){
+        Movie movieResult = this.parseMovieParameters(movie);
         MovieDAO  movieDAO = new MovieDAO(connection);
-        if(movieDAO.updateItem(movie)){
+        if(movieDAO.updateItem(movieResult)){
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean deleteItem(long itemId) {
+    public boolean deleteMovie(long itemId) {
         MovieDAO movieDAO = new MovieDAO(connection);
         movieDAO.deleteItem(itemId);
         return true;
+    }
+
+    private Movie parseMovieParameters(Movie movie){
+        List<Country> countries = this.containListItems(movie.getCountries());
+        List<Category> categories = this.containListItems(movie.getCategories());
+        List<Actor> actors = this.containListItems(movie.getActors());
+        List<Crew> crews = this.containListItems(movie.getCrews());
+        movie.setCountries(countries);
+        movie.setCategories(categories);
+        movie.setActors(actors);
+        movie.setCrews(crews);
+        return movie;
     }
 
 }

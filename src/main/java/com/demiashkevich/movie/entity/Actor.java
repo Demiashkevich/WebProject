@@ -68,4 +68,19 @@ public class Actor extends Entity{
         this.rating = rating;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Actor)) return false;
+
+        Actor actor = (Actor) o;
+
+        return actorId == actor.actorId;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return actorId;
+    }
 }

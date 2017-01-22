@@ -3,7 +3,12 @@ package com.demiashkevich.movie.service;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Entity;
 
-public abstract class AbstractService<T extends Entity, K> implements Service<T, K>{
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public abstract class AbstractService {
 
     protected ProxyConnection connection;
     protected static final boolean FULL_OCCUPANCY = true;
@@ -11,6 +16,14 @@ public abstract class AbstractService<T extends Entity, K> implements Service<T,
 
     public AbstractService(ProxyConnection connection) {
         this.connection = connection;
+    }
+
+    protected <T extends Entity> List<T> containListItems(List<T> items){
+        Set<T> sendList = new HashSet<>();
+        sendList.addAll(items);
+        List<T> results = new ArrayList<>();
+        results.addAll(sendList);
+        return results;
     }
 
 }

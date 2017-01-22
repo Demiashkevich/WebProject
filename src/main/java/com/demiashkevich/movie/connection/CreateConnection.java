@@ -14,10 +14,10 @@ public class CreateConnection {
 
     public CreateConnection(){
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             proxyConnection = new ProxyConnection(connection);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

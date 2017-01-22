@@ -33,7 +33,7 @@ public class AddActorCommand implements Command {
             actor.setMovies(movies);
 
             ActorService actorService = new ActorService(connection);
-            if(actorService.addItem(actor)) {
+            if(actorService.addActor(actor)) {
                 return ConfigurationManager.getKey(PATH_SUCCESS);
             } else {
                 request.setAttribute("error_message", ERROR_MESSAGE);

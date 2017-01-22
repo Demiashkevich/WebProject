@@ -447,6 +447,7 @@ body{
 }
 .am-poster img{
 	width: 230px;
+	height: 355px;
 	margin: 10px
 }
 .am-list{
@@ -486,6 +487,7 @@ body{
 }
 .aa-ca img{
 	height: 200px;
+	width: 150px;
 }
 .r-context{
 	padding: 10px 20px;

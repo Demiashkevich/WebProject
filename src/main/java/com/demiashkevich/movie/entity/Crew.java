@@ -38,4 +38,22 @@ public class Crew extends Entity {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Crew)) return false;
+
+        Crew crew = (Crew) o;
+
+        return crewId == crew.crewId && !(role != null ? !role.equals(crew.role) : crew.role != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = crewId;
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        return result;
+    }
 }

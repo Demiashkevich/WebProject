@@ -85,4 +85,21 @@ public class User extends Entity {
     public void setEvaluations(List<Evaluation> evaluations) {
         this.evaluations = evaluations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (userId != user.userId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return userId;
+    }
 }

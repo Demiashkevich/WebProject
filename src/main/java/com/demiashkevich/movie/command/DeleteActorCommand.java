@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DeleteActorCommand implements Command {
 
     private static final String PAGE_SUCCESS = "path.page.success";
+    private static final String PAGE_ERROR = "path.page.error";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -17,15 +18,16 @@ public class DeleteActorCommand implements Command {
         try {
             connection = ConnectionPool.takeConnection();
 
-            long actor_id = Long.parseLong(request.getParameter("actor_id"));
+            long actorId = Long.parseLong(request.getParameter("actor_id"));
             ActorService actorService = new ActorService(connection);
-            if(actorService.deleteItem(actor_id)) {
+            if(actorService.deleteActor(actorId)) {
                 return ConfigurationManager.getKey(PAGE_SUCCESS);
+            } else {
+                return ConfigurationManager.getKey(PAGE_ERROR);
             }
         } finally {
             ConnectionPool.putConnection(connection);
         }
-        return null;
     }
 
 }

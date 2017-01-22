@@ -5,7 +5,7 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="css/basicsss.css">
+    <link rel="stylesheet" type="text/css" href="css/basic.css">
     <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>

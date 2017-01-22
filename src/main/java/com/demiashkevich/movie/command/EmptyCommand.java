@@ -5,10 +5,13 @@ import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Actor;
 import com.demiashkevich.movie.entity.Movie;
 import com.demiashkevich.movie.manager.ConfigurationManager;
+import com.demiashkevich.movie.memento.RequestParameter;
+import com.demiashkevich.movie.memento.RequestParameterList;
 import com.demiashkevich.movie.service.ActorService;
 import com.demiashkevich.movie.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,20 +25,27 @@ public class EmptyCommand implements Command {
     public String execute(HttpServletRequest request) {
         ProxyConnection connection = null;
             try {
-            connection = ConnectionPool.takeConnection();
+                connection = ConnectionPool.takeConnection();
 
-            MovieService movieService = new MovieService(connection);
-            List<Movie> movies = movieService.findItems(COUNT_MOVIES);
-            request.setAttribute("movies", movies);
+                MovieService movieService = new MovieService(connection);
+                List<Movie> movies = movieService.findMovies(COUNT_MOVIES);
+                request.setAttribute("movies", movies);
 
-            ActorService actorService = new ActorService(connection);
-            List<Actor> actors = actorService.findItems(COUNT_ACTORS);
-            request.setAttribute("actors", actors);
+                ActorService actorService = new ActorService(connection);
+                List<Actor> actors = actorService.findActors(COUNT_ACTORS);
+                request.setAttribute("actors", actors);
 
-            request.setAttribute("locale", Locale.getDefault());
-        } finally {
-            ConnectionPool.putConnection(connection);
-        }
+                RequestParameterList parameters = RequestParameterList.getInstance();
+                HttpSession session = request.getSession(true);
+                RequestParameter parameter = new RequestParameter();
+                parameter.setCommand(EnumCommand.EMPTY);
+                parameters.offerLast(parameter);
+                session.setAttribute("parameters", parameters);
+
+                request.setAttribute("locale", Locale.getDefault());
+            } finally {
+                ConnectionPool.putConnection(connection);
+            }
         return ConfigurationManager.getKey(PAGE_HOME);
     }
 }

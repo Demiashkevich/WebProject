@@ -14,6 +14,7 @@ import java.util.List;
 public class EvaluationDAO extends AbstractDAO<Evaluation>{
 
     private static final String INSERT_EVALUATION = "INSERT INTO evaluation(user_id, movie_id, title, comment, rating) VALUES(?,?,?,?,?)";
+    private static final String CHECK_EXIST_EVALUATION = "SELECT 1 FROM evaluation WHERE evaluation.movie_id = ? AND evaluation.user_id = ? LIMIT 1";
     private static final String SELECT_EVALUATION_BY_MOVIE_ID = "SELECT evaluation.title, evaluation.comment, evaluation.rating, user.user_id, user.first_name, user.last_name FROM evaluation INNER JOIN user ON evaluation.user_id = user.user_id WHERE evaluation.movie_id = ?";
     private static final String DELETE_EVALUATION = "DELETE FROM evaluation WHERE evaluation.user_id = ? AND evaluation.movie_id = ?";
     private static final String UPDATE_EVALUATION = "UPDATE evaluation SET evaluation.title = ?, evaluation.comment = ?, evaluation.rating = ? WHERE evaluation.user_id = ? AND evaluation.movie_id = ?";
@@ -23,10 +24,10 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
         super(connection);
     }
 
-    public boolean deleteItem(long userId, long movieId){
+    public boolean deleteItem(final long USER_ID, final long MOVIE_ID){
         try(PreparedStatement statement = connection.prepareStatement(DELETE_EVALUATION)) {
-            statement.setLong(1, userId);
-            statement.setLong(2, movieId);
+            statement.setLong(1, USER_ID);
+            statement.setLong(2, MOVIE_ID);
             statement.executeUpdate();
             return true;
         } catch (SQLException e){
@@ -48,6 +49,50 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    @Override
+    public List<Evaluation> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+        return this.find(SELECT_EVALUATION_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
+    }
+
+    public boolean checkExistEvaluation(final long MOVIE_ID, final int USER_ID){
+        try(PreparedStatement statement = connection.prepareStatement(CHECK_EXIST_EVALUATION)){
+            statement.setLong(1,MOVIE_ID);
+            statement.setInt(2, USER_ID);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public List<Evaluation> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
+        return null;
+    }
+
+    @Override
+    public List<Evaluation> findAllItems() {
+        return null;
+    }
+
+    @Override
+    public List<Evaluation> findItems(final int FROM, final int COUNT) {
+        return null;
+    }
+
+    @Override
+    public int findCountRecords() {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteItem(final long EVALUATION_ID) {
         return false;
     }
 
@@ -77,9 +122,9 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
         return false;
     }
 
-    public boolean updateRating(long movieId){
+    public boolean updateRating(final long MOVIE_ID){
         try(CallableStatement statement = connection.prepareCall(CALL_PROCEDURE_UPDATE_RATING)) {
-            statement.setLong(1, movieId);
+            statement.setLong(1, MOVIE_ID);
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -113,41 +158,6 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
             e.printStackTrace();
         }
         return evaluations;
-    }
-
-    @Override
-    protected String getSelectItemAll() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemLimitByRating() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemByMovieId() {
-        return SELECT_EVALUATION_BY_MOVIE_ID;
-    }
-
-    @Override
-    protected String getSelectItemByActorId() {
-        return null;
-    }
-
-    @Override
-    protected String getDeleteItemById() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
     }
 
 }

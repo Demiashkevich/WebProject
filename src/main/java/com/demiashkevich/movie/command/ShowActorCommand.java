@@ -4,9 +4,12 @@ import com.demiashkevich.movie.connection.ConnectionPool;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Actor;
 import com.demiashkevich.movie.manager.ConfigurationManager;
+import com.demiashkevich.movie.memento.RequestParameter;
+import com.demiashkevich.movie.memento.RequestParameterList;
 import com.demiashkevich.movie.service.ActorService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class ShowActorCommand implements Command{
 
@@ -20,8 +23,17 @@ public class ShowActorCommand implements Command{
 
             int actorId = Integer.parseInt(request.getParameter("actor_id"));
             ActorService actorService = new ActorService(connection);
-            Actor actor = actorService.findItem(actorId);
-            request.getSession(true).setAttribute("actor", actor);
+            Actor actor = actorService.findActor(actorId);
+
+            HttpSession session = request.getSession();
+            RequestParameter requestParameter = new RequestParameter();
+            requestParameter.put("actor_id", String.valueOf(actorId));
+            requestParameter.setCommand(EnumCommand.SHOW_ACTOR);
+            RequestParameterList parameters = RequestParameterList.getInstance();
+            parameters.offerLast(requestParameter);
+            session.setAttribute("parameters", parameters);
+
+            session.setAttribute("actor", actor);
         } finally {
             ConnectionPool.putConnection(connection);
         }

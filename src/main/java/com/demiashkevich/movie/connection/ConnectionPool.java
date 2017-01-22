@@ -13,21 +13,18 @@ public class ConnectionPool{
     private static AtomicBoolean instance = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
 
-    private ConnectionPool(){
+    private ConnectionPool(final int POOL_SIZE){
+        connections = new ArrayBlockingQueue<>(POOL_SIZE);
     }
 
-    public static void getInstance(final int POOL_SIZE) {
+    public static void buildInstance(final int POOL_SIZE) {
         if(!instance.get()) {
             try {
                 lock.lock();
                 if( connections == null) {
                     instance.getAndSet(true);
-                    connections = new ArrayBlockingQueue<>(POOL_SIZE);
-                    for (int i = 0; i < POOL_SIZE; i++) {
-                        CreateConnection connection = new CreateConnection();
-                        connections.offer(connection.getConnection());
-                        System.out.println("CREATE CONNECTION");
-                    }
+                    ConnectionPool connectionPool = new ConnectionPool(POOL_SIZE);
+                    connectionPool.fillConnectionPool(POOL_SIZE);
                 }
             } finally {
                 lock.unlock();
@@ -35,19 +32,24 @@ public class ConnectionPool{
         }
     }
 
+    private void fillConnectionPool(final int POOL_SIZE){
+        for (int i = 0; i < POOL_SIZE; i++) {
+            CreateConnection connection = new CreateConnection();
+            connections.offer(connection.getConnection());
+        }
+    }
+
     public static ProxyConnection takeConnection(){
         try {
-            System.out.println("CONNECTION TAKE");
             return connections.take();
         } catch (InterruptedException exception) {
             exception.printStackTrace();
-            throw  new RuntimeException(exception);
-        }
+            throw new RuntimeException(exception);
+        }     // лог
     }
 
     public static void putConnection(ProxyConnection connection){
         try {
-            System.out.println("CONNECTION PUT");
             connections.put(connection);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -60,7 +62,6 @@ public class ConnectionPool{
             ProxyConnection connection;
             try {
                 connection = connections.take();
-                System.out.println("CONNECTION CLOSE");
                 connection.close();
             } catch (SQLException | InterruptedException e) {
                 e.printStackTrace();

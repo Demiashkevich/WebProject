@@ -1,4 +1,4 @@
-package com.demiashkevich.movie;
+package com.demiashkevich.movie.factory;
 
 import com.demiashkevich.movie.command.Command;
 import com.demiashkevich.movie.command.EmptyCommand;

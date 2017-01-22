@@ -6,34 +6,14 @@ import com.demiashkevich.movie.entity.Category;
 
 import java.util.List;
 
-public class CategoryService extends AbstractService<Category, Integer> {
+public class CategoryService extends AbstractService {
 
     public CategoryService(ProxyConnection connection) {
         super(connection);
     }
 
-    @Override
-    public List<Category> findAllItem() {
-        return new CategoryDAO(connection).findAll();
+    public List<Category> findAllCategories() {
+        return new CategoryDAO(connection).findAllItems();
     }
 
-    @Override
-    public boolean addItem(Category item) {
-        return false;
-    }
-
-    @Override
-    public Category findItem(Integer key) {
-        return null;
-    }
-
-    @Override
-    public List<Category> findItems(final int COUNT) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteItem(long itemId) {
-        return false;
-    }
 }

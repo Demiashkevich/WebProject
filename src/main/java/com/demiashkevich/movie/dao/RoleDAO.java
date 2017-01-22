@@ -17,16 +17,6 @@ public class RoleDAO extends AbstractDAO<Role> {
     }
 
     @Override
-    public boolean deleteItem(long itemId) {
-        return false;
-    }
-
-    @Override
-    public boolean addItem(Role item) {
-        return false;
-    }
-
-    @Override
     protected List<Role> parseResultSetLazy(ResultSet resultSet) {
         List<Role> roles = new ArrayList<>();
         try {
@@ -48,38 +38,38 @@ public class RoleDAO extends AbstractDAO<Role> {
     }
 
     @Override
-    protected String getSelectItemAll() {
-        return SELECT_ALL_ROLE;
+    public boolean deleteItem(final long ROLE_ID) {
+        return false;
     }
 
     @Override
-    protected String getSelectItemLimitByRating() {
+    public boolean addItem(Role item) {
+        return false;
+    }
+
+    @Override
+    public List<Role> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
         return null;
     }
 
     @Override
-    protected String getSelectItemByMovieId() {
+    public List<Role> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
         return null;
     }
 
     @Override
-    protected String getSelectItemByActorId() {
+    public List<Role> findAllItems() {
+        return this.findAll(SELECT_ALL_ROLE);
+    }
+
+    @Override
+    public List<Role> findItems(final int FROM, final int COUNT) {
         return null;
     }
 
     @Override
-    protected String getDeleteItemById() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectItemLimit() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectNumberRowItem() {
-        return null;
+    public int findCountRecords() {
+        return 0;
     }
 
 }
