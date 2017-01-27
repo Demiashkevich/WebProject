@@ -1,35 +1,39 @@
 package com.demiashkevich.movie.command;
 
-import com.demiashkevich.movie.connection.ConnectionPool;
-import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Movie;
+import com.demiashkevich.movie.exception.ServiceException;
 import com.demiashkevich.movie.manager.ConfigurationManager;
 import com.demiashkevich.movie.service.MovieService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AddMovieCommand extends AbstractActionMovieCommand {
 
-    private static final String PATH_SUCCESS = "path.page.success";
-    private static final String PATH_ADD_MOVIE = "path.page.add_movie";
-    private static final String ERROR_MESSAGE = "The input form <<Add Movie>> aren't valid.";
+    private static final Logger LOGGER = Logger.getLogger(AddMovieCommand.class);
+
+    private static final String PAGE_SUCCESS = "path.page.success";
+    private static final String PAGE_ERROR = "path.page.error";
+    private static final String PAGE_ERROR_ADD_MOVIE = "";
+
+    private static final String ERROR_VALIDATE = "VALIDATE ERROR";
+    private static final String ERROR_ADDITION = "ADDITION ERROR";
 
     @Override
     public String execute(HttpServletRequest request) {
-        ProxyConnection connection = null;
-        try {
-            connection = ConnectionPool.takeConnection();
+        Movie movie = this.parseRequest(request);
 
-            Movie movie = this.parseRequest(request);
-            MovieService movieService = new MovieService(connection);
-            if (movieService.addMovie(movie)) {
-                return ConfigurationManager.getKey(PATH_SUCCESS);
+        try {
+            MovieService movieService = new MovieService();
+            if(movieService.addMovie(movie)){
+                return ConfigurationManager.getKey(PAGE_SUCCESS);
             } else {
-                request.setAttribute("error_message", ERROR_MESSAGE);
-                return ConfigurationManager.getKey(PATH_ADD_MOVIE);
+                return ConfigurationManager.getKey(PAGE_ERROR);
             }
-        } finally {
-            ConnectionPool.putConnection(connection);
+        } catch (ServiceException exception) {
+            LOGGER.error(exception);
+            request.setAttribute("error", exception);
+            return ConfigurationManager.getKey(PAGE_ERROR_ADD_MOVIE);
         }
     }
 

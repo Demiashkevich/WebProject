@@ -4,15 +4,11 @@ import java.util.ArrayDeque;
 
 public class RequestParameterList {
 
-    private static final byte SIZE = 5;
+    private static final byte SIZE = 2;
 
-    private static ArrayDeque<RequestParameter> requestParameters = new ArrayDeque<>(SIZE);
+    private ArrayDeque<RequestParameter> requestParameters = new ArrayDeque<>(SIZE);
 
-    private RequestParameterList(){}
-
-    public static RequestParameterList getInstance(){
-        return new RequestParameterList();
-    }
+    public RequestParameterList(){}
 
     public void offerLast(RequestParameter requestParameter) {
         if(requestParameters.size() > SIZE){
@@ -27,7 +23,4 @@ public class RequestParameterList {
         return requestParameters.pollLast();
     }
 
-    public static void setRequestParameters(ArrayDeque<RequestParameter> requestParameters) {
-        RequestParameterList.requestParameters = requestParameters;
-    }
 }

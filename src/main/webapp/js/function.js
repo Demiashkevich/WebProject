@@ -1,5 +1,4 @@
-//Function Create Movie
-
+//Function Create Item
 function createItem(clone, put){
     var toClone = document.getElementById(clone);
     var clonedNode = toClone.cloneNode(true);
@@ -52,7 +51,7 @@ function emailValidate(email){
         return false;
     }
     if(!(/.+@.+\..+/).test(email.value)){
-        showInputError(email.parentNode, 'Enter a valid email adress.');
+        showInputError(email.parentNode, 'Enter a valid email address.');
         return false;
     }
     return true;
@@ -64,15 +63,15 @@ function passwordValidate(password, passwordConfirm){
         showInputError(password.parentNode, 'Enter password.');
         return false;
     }
-    if (!(/^(?=.*\d{1,}).*$/.test(password.value))){
+    if (!(/^(?=.*\d+).*$/.test(password.value))){
         showInputError(password.parentNode, 'The password must contain numbers.');
         return false;
     }
-    if (!(/^(?=.*[a-z]{1,}).*$/.test(password.value))) {
+    if (!(/^(?=.*[a-z]+).*$/.test(password.value))) {
         showInputError(password.parentNode, 'The password must contain letters.');
         return false;
     }
-    if (!(/^(?=.*[A-Z]{1,}).*$/.test(password.value))) {
+    if (!(/^(?=.*[A-Z]+).*$/.test(password.value))) {
         showInputError(password.parentNode, 'The password must contain an uppercase letter.');
         return false;
     }
@@ -92,7 +91,7 @@ function firstNameValidate(firstName){
         showInputError(firstName.parentNode, 'Enter first name.');
         return false;
     }
-    if(!firstName.value.match("[a-z]+")){
+    if(!firstName.value.match("[A-zА-яЁё]+")){
         showInputError(firstName.parentNode, 'Enter a valid first name.');
         return false;
     }
@@ -104,7 +103,7 @@ function lastNameValidate(lastName){
         showInputError(lastName.parentNode, 'Enter last name.');
         return false;
     }
-    if(!lastName.value.match("[a-z]+")){
+    if(!lastName.value.match("[A-zА-яЁё]+")){
         showInputError(lastName.parentNode, 'Enter a valid last name.');
         return false;
     }

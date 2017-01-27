@@ -1,7 +1,5 @@
 package com.demiashkevich.movie.command;
 
-import com.demiashkevich.movie.connection.ConnectionPool;
-import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Evaluation;
 import com.demiashkevich.movie.entity.Movie;
 import com.demiashkevich.movie.entity.User;
@@ -15,24 +13,19 @@ public class EditReviewCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        ProxyConnection connection = null;
-        try {
-            connection = ConnectionPool.takeConnection();
+        Evaluation evaluation = new Evaluation();
+        evaluation.setTitle(request.getParameter("title"));
+        evaluation.setComment(request.getParameter("comment"));
+        evaluation.setRating(Double.parseDouble(request.getParameter("rating")));
+        Movie movie = new Movie();
+        movie.setMovieId(Integer.parseInt(request.getParameter("movie_id")));
+        movie.setTitle(request.getParameter(request.getParameter("movie_title")));
+        evaluation.setMovie(movie);
+        User user = new User();
+        user.setUserId(Integer.parseInt(request.getParameter("user_id")));
+        evaluation.setUser(user);
 
-            Evaluation evaluation = new Evaluation();
-            evaluation.setTitle(request.getParameter("title"));
-            evaluation.setComment(request.getParameter("comment"));
-            evaluation.setRating(Double.parseDouble(request.getParameter("rating")));
-            Movie movie = new Movie();
-            movie.setMovieId(Integer.parseInt(request.getParameter("movie_id")));
-            movie.setTitle(request.getParameter(request.getParameter("movie_title")));
-            evaluation.setMovie(movie);
-            evaluation.setUser((User)request.getSession().getAttribute("user"));
-
-            request.setAttribute("evaluation", evaluation);
-        } finally {
-            ConnectionPool.putConnection(connection);
-        }
+        request.setAttribute("evaluation", evaluation);
         return ConfigurationManager.getKey(PAGE_ADD_REVIEW);
     }
 

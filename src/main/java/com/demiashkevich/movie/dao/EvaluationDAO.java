@@ -3,6 +3,7 @@ package com.demiashkevich.movie.dao;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Evaluation;
 import com.demiashkevich.movie.entity.User;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -24,20 +25,19 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
         super(connection);
     }
 
-    public boolean deleteItem(final long USER_ID, final long MOVIE_ID){
+    public boolean deleteItem(final long USER_ID, final long MOVIE_ID) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(DELETE_EVALUATION)) {
             statement.setLong(1, USER_ID);
             statement.setLong(2, MOVIE_ID);
             statement.executeUpdate();
             return true;
-        } catch (SQLException e){
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
     @Override
-    public boolean addItem(Evaluation item) {
+    public boolean addItem(Evaluation item) throws DAOException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EVALUATION)){
             preparedStatement.setInt(1, item.getUser().getUserId());
             preparedStatement.setLong(2, item.getMovie().getMovieId());
@@ -46,18 +46,17 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
             preparedStatement.setDouble(5, item.getRating());
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
     @Override
-    public List<Evaluation> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+    public List<Evaluation> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_EVALUATION_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
-    public boolean checkExistEvaluation(final long MOVIE_ID, final int USER_ID){
+    public boolean checkExistEvaluation(final long MOVIE_ID, final int USER_ID) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(CHECK_EXIST_EVALUATION)){
             statement.setLong(1,MOVIE_ID);
             statement.setInt(2, USER_ID);
@@ -65,8 +64,8 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
             if(result.next()){
                 return true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return false;
     }
@@ -96,7 +95,7 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
         return false;
     }
 
-    public boolean updateItem(Evaluation evaluation){
+    public boolean updateItem(Evaluation evaluation) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(UPDATE_EVALUATION)) {
             statement.setString(1, evaluation.getTitle());
             statement.setString(2, evaluation. getComment());
@@ -105,32 +104,29 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
             statement.setLong(5, evaluation.getMovie().getMovieId());
             statement.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
-    public boolean updateRating(Evaluation evaluation){
+    public boolean updateRating(Evaluation evaluation) throws DAOException {
         try(CallableStatement statement = connection.prepareCall(CALL_PROCEDURE_UPDATE_RATING)) {
             statement.setLong(1, evaluation.getMovie().getMovieId());
             statement.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
-    public boolean updateRating(final long MOVIE_ID){
+    public boolean updateRating(final long MOVIE_ID) throws DAOException {
         try(CallableStatement statement = connection.prepareCall(CALL_PROCEDURE_UPDATE_RATING)) {
             statement.setLong(1, MOVIE_ID);
             statement.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
     @Override
@@ -139,7 +135,7 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
     }
 
     @Override
-    protected List<Evaluation> parseResultSetFull(ResultSet resultSet) {
+    protected List<Evaluation> parseResultSetFull(ResultSet resultSet) throws DAOException {
         List<Evaluation> evaluations = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -154,8 +150,8 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
                 evaluation.setUser(user);
                 evaluations.add(evaluation);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+           throw new DAOException(exception);
         }
         return evaluations;
     }

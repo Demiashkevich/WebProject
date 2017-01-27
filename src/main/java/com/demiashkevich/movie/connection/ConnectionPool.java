@@ -1,12 +1,16 @@
 package com.demiashkevich.movie.connection;
 
 
+import org.apache.log4j.Logger;
+
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool{
+
+    private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
 
     private static ArrayBlockingQueue<ProxyConnection> connections;
 
@@ -40,19 +44,20 @@ public class ConnectionPool{
     }
 
     public static ProxyConnection takeConnection(){
+        ProxyConnection connection = null;
         try {
-            return connections.take();
+            connection = connections.take();
         } catch (InterruptedException exception) {
-            exception.printStackTrace();
-            throw new RuntimeException(exception);
-        }     // лог
+            LOGGER.error(exception);
+        }
+        return connection;
     }
 
     public static void putConnection(ProxyConnection connection){
         try {
             connections.put(connection);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException exception) {
+            LOGGER.error(exception);
         }
     }
 
@@ -63,8 +68,8 @@ public class ConnectionPool{
             try {
                 connection = connections.take();
                 connection.close();
-            } catch (SQLException | InterruptedException e) {
-                e.printStackTrace();
+            } catch (SQLException | InterruptedException exception) {
+                LOGGER.error(exception);
             }
         }
     }

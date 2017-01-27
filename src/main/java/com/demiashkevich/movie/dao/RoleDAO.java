@@ -2,6 +2,7 @@ package com.demiashkevich.movie.dao;
 
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Role;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class RoleDAO extends AbstractDAO<Role> {
     }
 
     @Override
-    protected List<Role> parseResultSetLazy(ResultSet resultSet) {
+    protected List<Role> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<Role> roles = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -26,8 +27,8 @@ public class RoleDAO extends AbstractDAO<Role> {
                 role.setName(resultSet.getString(2));
                 roles.add(role);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return roles;
     }
@@ -58,7 +59,7 @@ public class RoleDAO extends AbstractDAO<Role> {
     }
 
     @Override
-    public List<Role> findAllItems() {
+    public List<Role> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_ROLE);
     }
 

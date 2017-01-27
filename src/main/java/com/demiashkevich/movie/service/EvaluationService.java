@@ -1,41 +1,75 @@
 package com.demiashkevich.movie.service;
 
-import com.demiashkevich.movie.connection.ProxyConnection;
+import com.demiashkevich.movie.connection.ConnectionPool;
 import com.demiashkevich.movie.dao.EvaluationDAO;
 import com.demiashkevich.movie.entity.Evaluation;
+import com.demiashkevich.movie.exception.DAOException;
+import com.demiashkevich.movie.exception.ServiceException;
+import com.demiashkevich.movie.validation.EvaluationValidation;
+import com.demiashkevich.movie.validation.Validation;
 
 public class EvaluationService extends AbstractService {
 
-    public EvaluationService(ProxyConnection connection) {
-        super(connection);
-    }
+    private static final int ERROR_VALIDATION = -1;
+    private static final int ERROR_EXIST = 0;
+    private static final int SUCCESS = 1;
 
-    public boolean addEvaluation(Evaluation item) {
-        EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
-        if(!evaluationDAO.checkExistEvaluation(item.getMovie().getMovieId(), item.getUser().getUserId())) {
-            if (evaluationDAO.addItem(item)) {
-                evaluationDAO.updateRating(item);
-                return true;
+    public EvaluationService() {}
+
+    public int addEvaluation(Evaluation evaluation) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
+            long movieId = evaluation.getMovie().getMovieId();
+            int userId = evaluation.getUser().getUserId();
+            Validation<Evaluation> validation = new EvaluationValidation();
+            if(!validation.execute(evaluation)){
+                return ERROR_VALIDATION;
             }
-        }
-        return false;
-    }
-
-    public boolean updateEvaluation(Evaluation evaluation){
-        EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
-        if(evaluationDAO.updateItem(evaluation)){
+            if(evaluationDAO.checkExistEvaluation(movieId, userId)) {
+                return ERROR_EXIST;
+            }
+            evaluationDAO.addItem(evaluation);
             evaluationDAO.updateRating(evaluation);
-            return true;
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
         }
-        return false;
+        return SUCCESS;
     }
 
-    public boolean deleteEvaluation(long userId, long movieId){
-        EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
-        if(evaluationDAO.deleteItem(userId, movieId)) {
-            evaluationDAO.updateRating(movieId);
-            return true;
+    public boolean updateEvaluation(Evaluation evaluation) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+            Validation<Evaluation> validation = new EvaluationValidation();
+            EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
+            if(!validation.execute(evaluation)){
+                return false;
+            }
+            evaluationDAO.updateItem(evaluation);
+            evaluationDAO.updateRating(evaluation);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
         }
-        return false;
+        return true;
+    }
+
+    public boolean deleteEvaluation(long userId, long movieId) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
+            evaluationDAO.deleteItem(userId, movieId);
+            evaluationDAO.updateRating(movieId);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
+        return true;
     }
 }

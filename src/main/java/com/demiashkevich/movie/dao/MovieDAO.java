@@ -2,6 +2,7 @@ package com.demiashkevich.movie.dao;
 
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.*;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +36,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
     }
 
     @Override
-    protected List<Movie> parseResultSetFull(ResultSet resultSet) {
+    protected List<Movie> parseResultSetFull(ResultSet resultSet) throws DAOException {
         List<Movie> movies = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -49,8 +50,8 @@ public class MovieDAO extends AbstractDAO<Movie> {
                 movie.setRating(resultSet.getDouble(7));
                 movies.add(movie);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return movies;
     }
@@ -73,7 +74,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
     }
 
     @Override
-    public boolean addItem(Movie movie) {
+    public boolean addItem(Movie movie) throws DAOException {
         try {
             connection.setAutoCommit(false);
             try(PreparedStatement statementMovie = connection.prepareStatement(INSERT_MOVIE)) {
@@ -113,47 +114,47 @@ public class MovieDAO extends AbstractDAO<Movie> {
             }
             connection.commit();
             connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return true;
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return true;
     }
 
     @Override
-    public List<Movie> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+    public List<Movie> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_MOVIE_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
     @Override
-    public List<Movie> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) {
+    public List<Movie> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_MOVIE_BY_ACTOR_ID, ACTOR_ID, OCCUPANCY);
     }
 
     @Override
-    public List<Movie> findAllItems() {
+    public List<Movie> findAllItems() throws DAOException {
         return this.findAll(SELECT_MOVIE_ALL);
     }
 
     @Override
-    public List<Movie> findItems(final int FROM, final int COUNT) {
+    public List<Movie> findItems(final int FROM, final int COUNT) throws DAOException {
         return this.find(SELECT_MOVIE_LIMIT, FROM, COUNT);
     }
 
     @Override
-    public int findCountRecords() {
+    public int findCountRecords() throws DAOException {
         return this.findCountRow(SELECT_NUMBER_ROW_MOVIE);
     }
 
     @Override
-    public boolean deleteItem(final long MOVIE_ID) {
+    public boolean deleteItem(final long MOVIE_ID) throws DAOException {
         return this.delete(DELETE_MOVIE, MOVIE_ID);
     }
 
-    public List<Movie> findItemsSortByRating(final int COUNT) {
+    public List<Movie> findItemsSortByRating(final int COUNT) throws DAOException {
         return this.find(SELECT_MOVIE_LIMIT_BY_RATING, COUNT, false);
     }
 
-    public boolean updateItem(Movie movie){
+    public boolean updateItem(Movie movie) throws DAOException {
         try {
             connection.setAutoCommit(false);
             try(PreparedStatement statement = connection.prepareStatement(UPDATE_MOVIE)) {
@@ -200,10 +201,9 @@ public class MovieDAO extends AbstractDAO<Movie> {
             connection.commit();
             connection.setAutoCommit(true);
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return false;
     }
 
 }

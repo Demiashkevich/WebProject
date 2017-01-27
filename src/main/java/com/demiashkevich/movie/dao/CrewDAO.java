@@ -3,6 +3,7 @@ package com.demiashkevich.movie.dao;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Crew;
 import com.demiashkevich.movie.entity.Role;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ public class CrewDAO extends AbstractDAO<Crew> {
     }
 
     @Override
-    protected List<Crew> parseResultSetFull(ResultSet resultSet) {
+    protected List<Crew> parseResultSetFull(ResultSet resultSet) throws DAOException {
         List<Crew> crews = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -33,14 +34,14 @@ public class CrewDAO extends AbstractDAO<Crew> {
                 crew.setRole(role);
                 crews.add(crew);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return crews;
     }
 
     @Override
-    protected List<Crew> parseResultSetLazy(ResultSet resultSet) {
+    protected List<Crew> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<Crew> crews = new ArrayList<>();
         try {
             while(resultSet.next()){
@@ -50,8 +51,8 @@ public class CrewDAO extends AbstractDAO<Crew> {
                 crew.setLastName(resultSet.getString(3));
                 crews.add(crew);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return crews;
     }
@@ -62,7 +63,7 @@ public class CrewDAO extends AbstractDAO<Crew> {
     }
 
     @Override
-    public List<Crew> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+    public List<Crew> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_CREW_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
@@ -72,7 +73,7 @@ public class CrewDAO extends AbstractDAO<Crew> {
     }
 
     @Override
-    public List<Crew> findAllItems() {
+    public List<Crew> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_CREW);
     }
 

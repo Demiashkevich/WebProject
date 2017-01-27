@@ -3,6 +3,7 @@ package com.demiashkevich.movie.dao;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Actor;
 import com.demiashkevich.movie.entity.Movie;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,35 +27,35 @@ public class ActorDAO extends AbstractDAO<Actor> {
     }
 
     @Override
-    public List<Actor> findAllItems(){
+    public List<Actor> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_ACTOR);
     }
 
     @Override
-    public List<Actor> findItems(final int FROM, final int COUNT){
+    public List<Actor> findItems(final int FROM, final int COUNT) throws DAOException {
         return this.find(SELECT_ACTOR_LIMIT, FROM, COUNT);
     }
 
     @Override
-    public int findCountRecords(){
+    public int findCountRecords() throws DAOException {
         return this.findCountRow(SELECT_NUMBER_ROW_ACTOR);
     }
 
     @Override
-    public boolean deleteItem(final long ACTOR_ID){
+    public boolean deleteItem(final long ACTOR_ID) throws DAOException {
         return this.delete(DELETE_ACTOR, ACTOR_ID);
     }
 
-    public List<Actor> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY){
+    public List<Actor> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_ACTOR_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
-    public List<Actor> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY){
+    public List<Actor> findItemsByActorId(final long ACTOR_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_ACTOR_BY_ACTOR_ID, ACTOR_ID, OCCUPANCY);
     }
 
     @Override
-    protected List<Actor> parseResultSetLazy(ResultSet resultSet) {
+    protected List<Actor> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<Actor> actors = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -65,14 +66,14 @@ public class ActorDAO extends AbstractDAO<Actor> {
                 actor.setPhoto(resultSet.getString(4));
                 actors.add(actor);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return actors;
     }
 
     @Override
-    protected List<Actor> parseResultSetFull(ResultSet resultSet) {
+    protected List<Actor> parseResultSetFull(ResultSet resultSet) throws DAOException {
         List<Actor> actors = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -84,14 +85,14 @@ public class ActorDAO extends AbstractDAO<Actor> {
                 actor.setPhoto(resultSet.getString(5));
                 actors.add(actor);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return actors;
     }
 
     @Override
-    public boolean addItem(Actor actor) {
+    public boolean addItem(Actor actor) throws DAOException {
         try {
             connection.setAutoCommit(false);
             try(PreparedStatement statementActor = connection.prepareStatement(INSERT_ACTOR)) {
@@ -109,10 +110,10 @@ public class ActorDAO extends AbstractDAO<Actor> {
             }
             connection.commit();
             connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return true;
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return true;
     }
 
 }

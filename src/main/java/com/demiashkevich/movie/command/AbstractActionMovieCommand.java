@@ -1,7 +1,7 @@
 package com.demiashkevich.movie.command;
 
-import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.*;
+import com.demiashkevich.movie.exception.ServiceException;
 import com.demiashkevich.movie.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,34 +14,42 @@ public abstract class AbstractActionMovieCommand implements Command {
     @Override
     public abstract String execute(HttpServletRequest request);
 
-    protected void fillRequest(HttpServletRequest request, ProxyConnection connection){
-        CategoryService categoryService = new CategoryService(connection);
+    void fillRequest(HttpServletRequest request) throws ServiceException {
+        CategoryService categoryService = new CategoryService();
         List<Category> categories = categoryService.findAllCategories();
         request.setAttribute("categories", categories);
 
-        CountryService countryService = new CountryService(connection);
+        CountryService countryService = new CountryService();
         List<Country> countries = countryService.findAllCountries();
         request.setAttribute("countries", countries);
 
-        ActorService actorService = new ActorService(connection);
+        ActorService actorService = new ActorService();
         List<Actor> actors = actorService.findAllActors();
         request.setAttribute("actors", actors);
 
-        CrewService crewService = new CrewService(connection);
+        CrewService crewService = new CrewService();
         List<Crew> crews = crewService.findAllCrews();
         request.setAttribute("crews", crews);
 
-        RoleService roleService = new RoleService(connection);
+        RoleService roleService = new RoleService();
         List<Role> roles = roleService.findAllRoles();
         request.setAttribute("roles", roles);
     }
 
-    protected Movie parseRequest(HttpServletRequest request) {
+    Movie parseRequest(HttpServletRequest request) {
+        String title = request.getParameter("title");
+        String date = request.getParameter("date");
+        String description = request.getParameter("description");
+        String length = request.getParameter("length");
         Movie movie = new Movie();
-        movie.setTitle(request.getParameter("title"));
-        movie.setDate(Date.valueOf(request.getParameter("date")));
-        movie.setDescription(request.getParameter("description"));
-        movie.setLength(Short.parseShort(request.getParameter("length")));
+        movie.setTitle(title);
+        if(!date.isEmpty()) {
+            movie.setDate(Date.valueOf(date));
+        }
+        movie.setDescription(description);
+        if(!length.isEmpty()) {
+            movie.setLength(Short.parseShort(length));
+        }
         String[] categoriesId = request.getParameterValues("categories");
         List<Category> categories = this.parseCategoriesId(categoriesId);
         movie.setCategories(categories);

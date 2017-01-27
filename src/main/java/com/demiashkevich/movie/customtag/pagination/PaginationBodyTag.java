@@ -1,10 +1,14 @@
 package com.demiashkevich.movie.customtag.pagination;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 public class PaginationBodyTag extends TagSupport {
+
+    private static final Logger LOGGER = Logger.getLogger(PaginationBodyTag.class);
 
     private int currentPage;
     private int countPage;
@@ -30,8 +34,8 @@ public class PaginationBodyTag extends TagSupport {
         bodyTag += "</tr></table>";
         try {
             pageContext.getOut().write(bodyTag);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            LOGGER.error(exception);
         }
         return SKIP_BODY;
     }

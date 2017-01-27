@@ -2,6 +2,7 @@ package com.demiashkevich.movie.dao;
 
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.User;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ public class UserDAO extends AbstractDAO<User>{
         super(connection);
     }
 
-    public User findUser(String email){
+    public User findUser(String email) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(SELECT_USER)){
             statement.setString(1, email);
             try(ResultSet resultSet = statement.executeQuery()) {
@@ -38,26 +39,25 @@ public class UserDAO extends AbstractDAO<User>{
                     return user;
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return null;
     }
 
-    public boolean updateStatusUser(final int USER_ID, final boolean STATUS){
+    public boolean updateStatusUser(final int USER_ID, final boolean STATUS) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(UPDATE_USER_STATUS)){
             statement.setBoolean(1, STATUS);
             statement.setInt(2, USER_ID);
             statement.executeUpdate();
             return true;
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            throw new DAOException(exception);
         }
-        return false;
     }
 
     @Override
-    public boolean addItem(User user){
+    public boolean addItem(User user) throws DAOException {
         try(PreparedStatement statement = connection.prepareStatement(INSERT_CREATE_ACCOUNT)){
             statement.setString(1, user.getPassword());
             statement.setString(2, user.getFirstName());
@@ -67,10 +67,10 @@ public class UserDAO extends AbstractDAO<User>{
             statement.setBoolean(6, false);
             statement.setBoolean(7, true);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return true;
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
-        return true;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
-    public List<User> findAllItems() {
+    public List<User> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_USER);
     }
 
@@ -99,7 +99,7 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
-    public boolean deleteItem(final long USER_ID) {
+    public boolean deleteItem(final long USER_ID) throws DAOException {
         return delete(DELETE_USER, USER_ID);
     }
 
@@ -109,7 +109,7 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
-    protected List<User> parseResultSetLazy(ResultSet resultSet) {
+    protected List<User> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<User> users = new ArrayList<>();
         try {
             while (resultSet.next()) {
@@ -120,8 +120,8 @@ public class UserDAO extends AbstractDAO<User>{
                 user.setStatus(resultSet.getBoolean(4));
                 users.add(user);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return users;
     }

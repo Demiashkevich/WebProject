@@ -14,9 +14,7 @@ public abstract class AbstractService {
     protected static final boolean FULL_OCCUPANCY = true;
     protected static final boolean LAZY_OCCUPANCY = false;
 
-    public AbstractService(ProxyConnection connection) {
-        this.connection = connection;
-    }
+    public AbstractService() {}
 
     protected <T extends Entity> List<T> containListItems(List<T> items){
         Set<T> sendList = new HashSet<>();

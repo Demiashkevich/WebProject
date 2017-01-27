@@ -2,6 +2,7 @@ package com.demiashkevich.movie.dao;
 
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Country;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class CountryDAO extends AbstractDAO<Country> {
     }
 
     @Override
-    public List<Country> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+    public List<Country> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_COUNTRY_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
@@ -33,7 +34,7 @@ public class CountryDAO extends AbstractDAO<Country> {
     }
 
     @Override
-    public List<Country> findAllItems() {
+    public List<Country> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_COUNTY);
     }
 
@@ -58,7 +59,7 @@ public class CountryDAO extends AbstractDAO<Country> {
     }
 
     @Override
-    protected List<Country> parseResultSetLazy(ResultSet resultSet) {
+    protected List<Country> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<Country> countries = new ArrayList<>();
         try {
             while(resultSet.next()) {
@@ -68,7 +69,7 @@ public class CountryDAO extends AbstractDAO<Country> {
                 countries.add(country);
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            throw new DAOException(exception);
         }
         return countries;
     }

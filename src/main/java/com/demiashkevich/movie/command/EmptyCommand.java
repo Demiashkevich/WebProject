@@ -1,51 +1,54 @@
 package com.demiashkevich.movie.command;
 
-import com.demiashkevich.movie.connection.ConnectionPool;
-import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Actor;
 import com.demiashkevich.movie.entity.Movie;
+import com.demiashkevich.movie.exception.ServiceException;
 import com.demiashkevich.movie.manager.ConfigurationManager;
 import com.demiashkevich.movie.memento.RequestParameter;
 import com.demiashkevich.movie.memento.RequestParameterList;
 import com.demiashkevich.movie.service.ActorService;
 import com.demiashkevich.movie.service.MovieService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Locale;
 
 public class EmptyCommand implements Command {
 
+    private static final Logger LOGGER = Logger.getLogger(EmptyCommand.class);
+
+    private static final String COUNT_MOVIES = "home.count.show.movie";
+    private static final String COUNT_ACTORS = "home.count.show.actor";
+
     private static final String PAGE_HOME = "path.page.home";
-    private static final int COUNT_MOVIES = 8;
-    private static final int COUNT_ACTORS = 4;
+    private static final String PAGE_ERROR_HOME = "";
 
     @Override
     public String execute(HttpServletRequest request) {
-        ProxyConnection connection = null;
-            try {
-                connection = ConnectionPool.takeConnection();
+        final int COUNT_M = Integer.parseInt(ConfigurationManager.getKey(COUNT_MOVIES));
+        final int COUNT_A = Integer.parseInt(ConfigurationManager.getKey(COUNT_ACTORS));
+        try {
+            MovieService movieService = new MovieService();
+            List<Movie> movies = movieService.findMovies(COUNT_M);
 
-                MovieService movieService = new MovieService(connection);
-                List<Movie> movies = movieService.findMovies(COUNT_MOVIES);
-                request.setAttribute("movies", movies);
+            request.setAttribute("movies", movies);
 
-                ActorService actorService = new ActorService(connection);
-                List<Actor> actors = actorService.findActors(COUNT_ACTORS);
-                request.setAttribute("actors", actors);
+            ActorService actorService = new ActorService();
+            List<Actor> actors = actorService.findActors(COUNT_A);
+            request.setAttribute("actors", actors);
 
-                RequestParameterList parameters = RequestParameterList.getInstance();
-                HttpSession session = request.getSession(true);
-                RequestParameter parameter = new RequestParameter();
-                parameter.setCommand(EnumCommand.EMPTY);
-                parameters.offerLast(parameter);
-                session.setAttribute("parameters", parameters);
-
-                request.setAttribute("locale", Locale.getDefault());
-            } finally {
-                ConnectionPool.putConnection(connection);
-            }
+            HttpSession session = request.getSession(true);
+            RequestParameter parameter = new RequestParameter();
+            parameter.setCommand(EnumCommand.EMPTY);
+            RequestParameterList parameters = (RequestParameterList)session.getAttribute("parameters");
+            parameters.offerLast(parameter);
+            session.setAttribute("parameters", parameters);
+        }catch (ServiceException exception) {
+            LOGGER.error(exception);
+            request.setAttribute("error", exception);
+            return ConfigurationManager.getKey(PAGE_ERROR_HOME);
+        }
         return ConfigurationManager.getKey(PAGE_HOME);
     }
 }

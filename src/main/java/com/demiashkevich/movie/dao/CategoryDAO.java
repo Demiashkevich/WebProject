@@ -2,6 +2,7 @@ package com.demiashkevich.movie.dao;
 
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.Category;
+import com.demiashkevich.movie.exception.DAOException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    protected List<Category> parseResultSetLazy(ResultSet resultSet) {
+    protected List<Category> parseResultSetLazy(ResultSet resultSet) throws DAOException {
         List<Category> categories = new ArrayList<>();
         try {
             while(resultSet.next()){
@@ -32,8 +33,8 @@ public class CategoryDAO extends AbstractDAO<Category> {
                 category.setName(resultSet.getString(2));
                 categories.add(category);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
         }
         return categories;
     }
@@ -44,7 +45,7 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    public List<Category> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) {
+    public List<Category> findItemsByMovieId(final long MOVIE_ID, final boolean OCCUPANCY) throws DAOException {
         return this.find(SELECT_CATEGORY_BY_MOVIE_ID, MOVIE_ID, OCCUPANCY);
     }
 
@@ -54,7 +55,7 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    public List<Category> findAllItems() {
+    public List<Category> findAllItems() throws DAOException {
         return this.findAll(SELECT_ALL_CATEGORY);
     }
 

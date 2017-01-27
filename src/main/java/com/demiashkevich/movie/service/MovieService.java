@@ -1,92 +1,158 @@
 package com.demiashkevich.movie.service;
 
-import com.demiashkevich.movie.connection.ProxyConnection;
+import com.demiashkevich.movie.connection.ConnectionPool;
 import com.demiashkevich.movie.dao.*;
 import com.demiashkevich.movie.entity.*;
-import com.demiashkevich.movie.validation.MovieValidationStrategy;
-import com.demiashkevich.movie.validation.ValidationStrategy;
+import com.demiashkevich.movie.exception.DAOException;
+import com.demiashkevich.movie.exception.ServiceException;
+import com.demiashkevich.movie.validation.MovieValidation;
+import com.demiashkevich.movie.validation.Validation;
 
 import java.util.List;
 
 public class MovieService extends AbstractService {
 
-    private ValidationStrategy<Movie> validationStrategy;
+    public MovieService() {}
 
-    public MovieService(ProxyConnection connection) {
-        super(connection);
-        validationStrategy = new MovieValidationStrategy();
+    public List<Movie> findAllMovies() throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            return new MovieDAO(connection).findAllItems();
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
     }
 
-    public List<Movie> findAllMovies() {
-        return new MovieDAO(connection).findAllItems();
-    }
+    public boolean addMovie(Movie movie) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
 
-    public boolean addMovie(Movie movie) {
-        Movie movieResult = this.parseMovieParameters(movie);
-        MovieDAO movieDAO = new MovieDAO(connection);
-//        if(validationStrategy.validate(movie)) {
+            Movie movieResult = this.parseMovieParameters(movie);
+            MovieDAO movieDAO = new MovieDAO(connection);
+            Validation<Movie> validation = new MovieValidation();
+            if(!validation.execute(movie)){
+                return false;
+            }
             movieDAO.addItem(movieResult);
-            return true;
-//        }
-//        return false;
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
+        return true;
     }
 
-    public List<Movie> findMovies(int page, int count){
-        int from = (page - 1)*count;
-        MovieDAO movieDAO = new MovieDAO(connection);
-        return movieDAO.findItems(from, count);
+    public List<Movie> findMovies(int page, int count) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            int from = (page - 1)*count;
+            MovieDAO movieDAO = new MovieDAO(connection);
+            return movieDAO.findItems(from, count);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
     }
 
-    public int countPage(int countMovie){
-        MovieDAO movieDAO = new MovieDAO(connection);
-        int records = movieDAO.findCountRecords();
-        return (int)Math.ceil((double)records / countMovie);
+    public int countPage(int countMovie) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            MovieDAO movieDAO = new MovieDAO(connection);
+            int records = movieDAO.findCountRecords();
+            return (int)Math.ceil((double)records / countMovie);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
     }
 
-    public Movie findMovie(Integer movieId) {
-        MovieDAO movieDAO = new MovieDAO(connection);
-        Movie movie = movieDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY).get(0);
+    public Movie findMovie(Integer movieId) throws ServiceException {
+        Movie movie = null;
+        try {
+            connection = ConnectionPool.takeConnection();
 
-        CountryDAO countryDAO = new CountryDAO(connection);
-        List<Country> countries = countryDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
-        movie.setCountries(countries);
+            MovieDAO movieDAO = new MovieDAO(connection);
+            List<Movie> movies = movieDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY);
+            if(!movies.isEmpty()) {
+                movie = movies.get(0);
 
-        CategoryDAO categoryDAO = new CategoryDAO(connection);
-        List<Category> categories = categoryDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
-        movie.setCategories(categories);
+                CountryDAO countryDAO = new CountryDAO(connection);
+                List<Country> countries = countryDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
+                movie.setCountries(countries);
 
-        CrewDAO crewDAO = new CrewDAO(connection);
-        List<Crew> crews = crewDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY);
-        movie.setCrews(crews);
+                CategoryDAO categoryDAO = new CategoryDAO(connection);
+                List<Category> categories = categoryDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
+                movie.setCategories(categories);
 
-        ActorDAO actorDAO = new ActorDAO(connection);
-        List<Actor> actors = actorDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
-        movie.setActors(actors);
+                CrewDAO crewDAO = new CrewDAO(connection);
+                List<Crew> crews = crewDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY);
+                movie.setCrews(crews);
 
-        EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
-        List<Evaluation> evaluations = evaluationDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY);
-        movie.setEvaluations(evaluations);
+                ActorDAO actorDAO = new ActorDAO(connection);
+                List<Actor> actors = actorDAO.findItemsByMovieId(movieId, LAZY_OCCUPANCY);
+                movie.setActors(actors);
 
+                EvaluationDAO evaluationDAO = new EvaluationDAO(connection);
+                List<Evaluation> evaluations = evaluationDAO.findItemsByMovieId(movieId, FULL_OCCUPANCY);
+                movie.setEvaluations(evaluations);
+            }
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
         return movie;
     }
 
-    public List<Movie> findMovies(int count) {
-        MovieDAO movieDAO = new MovieDAO(connection);
-        return movieDAO.findItemsSortByRating(count);
-    }
+    public List<Movie> findMovies(int count) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
 
-    public boolean updateMovie(Movie movie){
-        Movie movieResult = this.parseMovieParameters(movie);
-        MovieDAO  movieDAO = new MovieDAO(connection);
-        if(movieDAO.updateItem(movieResult)){
-            return true;
+            MovieDAO movieDAO = new MovieDAO(connection);
+            return movieDAO.findItemsSortByRating(count);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
         }
-        return false;
     }
 
-    public boolean deleteMovie(long itemId) {
-        MovieDAO movieDAO = new MovieDAO(connection);
-        movieDAO.deleteItem(itemId);
+    public boolean updateMovie(Movie movie) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+            Validation<Movie> validation = new MovieValidation();
+            if(!validation.execute(movie)){
+                return false;
+            }
+            Movie movieResult = this.parseMovieParameters(movie);
+            MovieDAO  movieDAO = new MovieDAO(connection);
+            movieDAO.updateItem(movieResult);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
+        return true;
+    }
+
+    public boolean deleteMovie(long itemId) throws ServiceException {
+        try {
+            connection = ConnectionPool.takeConnection();
+
+            MovieDAO movieDAO = new MovieDAO(connection);
+            movieDAO.deleteItem(itemId);
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        } finally {
+            ConnectionPool.putConnection(connection);
+        }
         return true;
     }
 

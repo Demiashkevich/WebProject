@@ -1,10 +1,14 @@
 package com.demiashkevich.movie.customtag.pagination;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 public class PaginationNextTag extends TagSupport{
+
+    private static final Logger LOGGER = Logger.getLogger(PaginationNextTag.class);
 
     private int currentPage;
     private int countPage;
@@ -24,8 +28,8 @@ public class PaginationNextTag extends TagSupport{
             flag = true;
             try {
                 pageContext.getOut().write("<a class=pagination-link href=movie?command=show_movies&currentPage=" + (currentPage + 1) + ">");
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException exception) {
+                LOGGER.error(exception);
             }
             return EVAL_BODY_INCLUDE;
         }
@@ -38,8 +42,8 @@ public class PaginationNextTag extends TagSupport{
         if(flag) {
             try {
                 pageContext.getOut().write("</a>");
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException exception) {
+                LOGGER.error(exception);
             }
         }
         return EVAL_PAGE;
