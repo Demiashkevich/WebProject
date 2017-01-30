@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
     <title></title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../css/basics.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>
@@ -16,7 +16,7 @@
     <h1 class="sc-title"><scan class="sc-title-text fade-in latest"><fmt:message key="authorization.title"/></scan></h1>
   </section>
   <section  class="si fade-in first"><!--Section Input-->
-    <form method="get" action="movie">
+    <form method="post" action="movie">
       <ul class="si-list">
         <li class="si-item">
           ${message_error}
