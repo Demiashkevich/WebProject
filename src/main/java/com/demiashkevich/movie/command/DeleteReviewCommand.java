@@ -18,7 +18,7 @@ public class DeleteReviewCommand implements Command {
     public String execute(HttpServletRequest request) {
         try {
             long movieId = Long.parseLong(request.getParameter("movie_id"));
-            long userId = Long.parseLong(request.getParameter("user_id"));
+            int userId = Integer.parseInt(request.getParameter("user_id"));
             EvaluationService evaluationService = new EvaluationService();
             evaluationService.deleteEvaluation(userId, movieId);
         } catch (ServiceException exception) {

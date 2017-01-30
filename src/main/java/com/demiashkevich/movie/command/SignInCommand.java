@@ -28,6 +28,7 @@ public class SignInCommand implements Command {
             User user = userService.findUser(email, password);
             if (user != null) {
                 HttpSession session = request.getSession(true);
+                user = userService.updateRank(user);
                 if(user.isAdmin()){
                     session.setAttribute("role", ClientType.ADMINISTRATOR);
                 } else {

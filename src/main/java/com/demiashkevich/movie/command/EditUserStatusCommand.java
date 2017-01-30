@@ -1,11 +1,13 @@
 package com.demiashkevich.movie.command;
 
+import com.demiashkevich.movie.entity.User;
 import com.demiashkevich.movie.exception.ServiceException;
 import com.demiashkevich.movie.manager.ConfigurationManager;
 import com.demiashkevich.movie.service.UserService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public class EditUserStatusCommand implements Command {
 
@@ -21,6 +23,8 @@ public class EditUserStatusCommand implements Command {
         try {
             UserService service = new UserService();
             service.updateStatusUser(user_id, status);
+            List<User> users = service.findUsers();
+            request.setAttribute("users", users);
         }catch (ServiceException exception) {
             LOGGER.error(exception);
             request.setAttribute("error", exception);

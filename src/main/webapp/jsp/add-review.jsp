@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../css/basics.css">
 </head>
 <body>
 <jsp:include page="global-header.jsp"/>

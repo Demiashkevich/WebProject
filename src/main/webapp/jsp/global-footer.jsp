@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <footer class="gf fade-in latest"><!--Global Footer-->
   <div class="gf-context">

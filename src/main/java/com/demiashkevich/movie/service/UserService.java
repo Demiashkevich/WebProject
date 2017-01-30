@@ -5,6 +5,7 @@ import com.demiashkevich.movie.dao.UserDAO;
 import com.demiashkevich.movie.entity.User;
 import com.demiashkevich.movie.exception.DAOException;
 import com.demiashkevich.movie.exception.ServiceException;
+import com.demiashkevich.movie.type.ClientRank;
 import com.demiashkevich.movie.validation.UserValidation;
 import com.demiashkevich.movie.validation.Validation;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -12,6 +13,12 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.List;
 
 public class UserService extends AbstractService {
+
+    private static final int BAFTA_INTERVAL_MIN = 0;
+    private static final int BAFTA_INTERVAL_MAX = 20;
+    private static final int GOLDEN_GLOBES_INTERVAL_MIN = 21;
+    private static final int GOLDEN_GLOBES_INTERVAL_MAX = 100;
+    private static final int OSCAR_INTERVAL_MIN = 101;
 
     private static final int ERROR_VALIDATION = -1;
     private static final int ERROR_EXIST = 0;
@@ -40,6 +47,36 @@ public class UserService extends AbstractService {
             ConnectionPool.putConnection(connection);
         }
         return SUCCESS;
+    }
+
+    public User updateRank(User user) throws ServiceException {
+        int experience = user.getExperience();
+        ClientRank rank = ClientRank.valueOf(user.getRank().toUpperCase());
+        UserDAO userDAO = new UserDAO(connection);
+        try {
+            if(BAFTA_INTERVAL_MIN <= experience && experience <= BAFTA_INTERVAL_MAX){
+                if(rank != ClientRank.BAFTA) {
+                    userDAO.updateRankUser(user.getUserId(), ClientRank.BAFTA.getNameRank());
+                    rank = ClientRank.BAFTA;
+                }
+            }
+            if(GOLDEN_GLOBES_INTERVAL_MIN <= experience && experience <= GOLDEN_GLOBES_INTERVAL_MAX){
+               if(rank != ClientRank.GOLDEN_GLOBES){
+                   userDAO.updateRankUser(user.getUserId(), ClientRank.GOLDEN_GLOBES.getNameRank());
+                   rank = ClientRank.GOLDEN_GLOBES;
+               }
+            }
+            if(OSCAR_INTERVAL_MIN <= experience){
+                if(rank != ClientRank.OSCAR){
+                    userDAO.updateRankUser(user.getUserId(), ClientRank.OSCAR.getNameRank());
+                    rank = ClientRank.OSCAR;
+                }
+            }
+            user.setRank(rank.getNameRank());
+        } catch (DAOException exception) {
+            throw new ServiceException(exception);
+        }
+        return user;
     }
 
     public boolean updateStatusUser(int userId, boolean status) throws ServiceException {

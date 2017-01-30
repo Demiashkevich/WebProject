@@ -32,16 +32,19 @@ public class AddReviewCommand implements Command{
         movie.setMovieId(Integer.parseInt(request.getParameter("movie_id")));
         evaluation.setMovie(movie);
 
+        User user = (User)request.getSession().getAttribute("user");
         try {
             EvaluationService evaluationService = new EvaluationService();
-            int result = evaluationService.addEvaluation(evaluation);
+            int result = evaluationService.addEvaluation(evaluation, user);
             switch (result) {
                 case -1: {
                     //ERROR DESCRIPTION
+                    System.out.println('1');
                     return ConfigurationManager.getKey(PAGE_ERROR);
                 }
                 case 0: {
                     //ERROR DESCRIPTION
+                    System.out.println('2');
                     return ConfigurationManager.getKey(PAGE_ERROR);
                 }
                 default: {

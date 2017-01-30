@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <category name="com.demiashkevich.webparser">
+    <category name="com.demiashkevich.movie">
         <priority value="debug"/>
         <appender-ref ref="console"/>
     </category>

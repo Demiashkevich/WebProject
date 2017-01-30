@@ -1,13 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="../../css/basic.css">
+  <link rel="stylesheet" type="text/css" href="../../css/basics.css">
 </head>
 <body>
   <jsp:include page="../global-header.jsp"/>

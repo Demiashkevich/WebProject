@@ -22,7 +22,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
     private static final String INSERT_PERSON_ROLE_MOVIE = "INSERT INTO movie_person_role(movie_id, person_id, role_id) VALUES (LAST_INSERT_ID(),?,?)";
     private static final String INSERT_ACTOR_MOVIE = "INSERT INTO movie_actor(movie_id, actor_id) VALUES (LAST_INSERT_ID(),?)";
     private static final String DELETE_MOVIE = "UPDATE movie SET movie.status = 0 WHERE movie.movie_id = ?";
-    private static final String SELECT_MOVIE_BY_MOVIE_ID = "SELECT movie.movie_id, movie.title, movie.date, movie.description, movie.length, movie.poster, movie.rating FROM movie WHERE movie.movie_id = ?";
+    private static final String SELECT_MOVIE_BY_MOVIE_ID = "SELECT movie.movie_id, movie.title, movie.date, movie.description, movie.length, movie.poster, movie.rating, movie.status FROM movie WHERE movie.movie_id = ?";
     private static final String SELECT_MOVIE_BY_ACTOR_ID = "SELECT movie.movie_id, movie.title, movie.poster FROM movie INNER JOIN movie_actor ON movie.movie_id = movie_actor.movie_id WHERE movie_actor.actor_id = ?";
     private static final String UPDATE_MOVIE = "UPDATE movie SET movie.title = ?, movie.date = ?, movie.description = ?, movie.length = ? WHERE movie.movie_id = ?";
     private static final String DELETE_LINKED_INF_BY_MOVIE_ID = "DELETE movie_country, category_movie, movie_actor, movie_person_role FROM movie_country INNER JOIN movie ON movie.movie_id = movie_country.movie_id INNER JOIN category_movie ON movie.movie_id = category_movie.movie_id INNER JOIN movie_actor ON movie.movie_id = movie_actor.movie_id INNER JOIN movie_person_role ON movie.movie_id = movie_person_role.movie_id WHERE movie.movie_id = ?";
@@ -30,6 +30,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
     private static final String INSERT_CATEGORY_WITH_MOVIE_ID = "INSERT INTO category_movie(movie_id, category_id) VALUES (?,?)";
     private static final String INSERT_CREW_WITH_MOVIE_ID = "INSERT INTO movie_person_role(movie_id, person_id, role_id) VALUES (?,?,?)";
     private static final String INSERT_ACTOR_WITH_MOVIE_ID = "INSERT INTO movie_actor(movie_id, actor_id) VALUES (?,?)";
+    private static final String SELECT_RATING_BY_MOVIE_ID = "SELECT movie.rating FROM movie WHERE movie.movie_id = ?";
 
     public MovieDAO(ProxyConnection connection) {
         super(connection);
@@ -48,6 +49,7 @@ public class MovieDAO extends AbstractDAO<Movie> {
                 movie.setLength(resultSet.getShort(5));
                 movie.setPoster(resultSet.getString(6));
                 movie.setRating(resultSet.getDouble(7));
+                movie.setStatus(resultSet.getBoolean(8));
                 movies.add(movie);
             }
         } catch (SQLException exception) {
@@ -71,6 +73,18 @@ public class MovieDAO extends AbstractDAO<Movie> {
             e.printStackTrace();
         }
         return movies;
+    }
+
+    public double findRatingByMovieId(final long MOVIE_ID) throws DAOException {
+        double rating;
+        try(PreparedStatement statement = connection.prepareStatement(SELECT_RATING_BY_MOVIE_ID)){
+            statement.setLong(1, MOVIE_ID);
+            ResultSet resultSet = statement.executeQuery();
+            rating = resultSet.getDouble(1);
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
+        }
+        return rating;
     }
 
     @Override

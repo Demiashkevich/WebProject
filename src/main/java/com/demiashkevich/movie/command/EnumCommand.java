@@ -18,13 +18,13 @@ public enum EnumCommand {
     REGISTRATION( new RegistrationCommand() ),
     AUTHORIZATION( new AuthorizationCommand() ),
     CREATE_REVIEW( new CreateReviewCommand() ),
+    ADD_REVIEW( new AddReviewCommand() ),
     SHOW_PRIVATE_OFFICE( new ShowPrivateOfficeCommand() ),
 
     //ADMINISTRATOR COMMAND
     EDIT_MOVIE( new EditMovieCommand() ),
     ADD_MOVIE( new AddMovieCommand() ),
     ADD_ACTOR( new AddActorCommand() ),
-    ADD_REVIEW( new AddReviewCommand() ),
     DELETE_MOVIE( new DeleteMovieCommand() ),
     DELETE_ACTOR( new DeleteActorCommand() ),
     UPDATE_MOVIE( new UpdateMovieCommand() ),

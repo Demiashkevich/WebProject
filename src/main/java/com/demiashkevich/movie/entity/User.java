@@ -12,6 +12,8 @@ public class User extends Entity {
     private String photo;
     private boolean admin;
     private boolean status;
+    private int experience;
+    private String rank;
     private List<Evaluation> evaluations;
 
     public int getUserId() {
@@ -84,6 +86,22 @@ public class User extends Entity {
 
     public void setEvaluations(List<Evaluation> evaluations) {
         this.evaluations = evaluations;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
     }
 
     @Override

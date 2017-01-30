@@ -40,21 +40,23 @@ public class ServletSecurityRoleFilter implements Filter{
         String commandName = request.getParameter("command");
 
         EnumCommand commandCreateReview = EnumCommand.CREATE_REVIEW;
-        if(ClientType.GUEST == role && commandName != null){
-            EnumCommand commandRequest = EnumCommand.valueOf(commandName.toUpperCase());
-            if(commandCreateReview == commandRequest){
-                RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(pageSignIn);
-                requestDispatcher.forward(request, response);
-                return;
+        if(commandName != null) {
+            if (ClientType.GUEST == role) {
+                EnumCommand commandRequest = EnumCommand.valueOf(commandName.toUpperCase());
+                if (commandCreateReview == commandRequest) {
+                    RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(pageSignIn);
+                    requestDispatcher.forward(request, response);
+                    return;
+                }
             }
-        }
-        EnumCommand commandAuthorization = EnumCommand.AUTHORIZATION;
-        if(ClientType.USER == role || ClientType.ADMINISTRATOR == role && commandName != null){
-            EnumCommand commandRequest = EnumCommand.valueOf(commandName.toUpperCase());
-            if(commandAuthorization == commandRequest){
-                RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(pagePrivateOffice);
-                requestDispatcher.forward(request, response);
-                return;
+            EnumCommand commandAuthorization = EnumCommand.AUTHORIZATION;
+            if (ClientType.USER == role || ClientType.ADMINISTRATOR == role) {
+                EnumCommand commandRequest = EnumCommand.valueOf(commandName.toUpperCase());
+                if (commandAuthorization == commandRequest) {
+                    RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(pagePrivateOffice);
+                    requestDispatcher.forward(request, response);
+                    return;
+                }
             }
         }
         filterChain.doFilter(request, response);

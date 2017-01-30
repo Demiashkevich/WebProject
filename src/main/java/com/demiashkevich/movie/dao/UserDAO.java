@@ -3,6 +3,7 @@ package com.demiashkevich.movie.dao;
 import com.demiashkevich.movie.connection.ProxyConnection;
 import com.demiashkevich.movie.entity.User;
 import com.demiashkevich.movie.exception.DAOException;
+import com.demiashkevich.movie.type.ClientRank;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,14 +13,43 @@ import java.util.List;
 
 public class UserDAO extends AbstractDAO<User>{
 
-    private static final String SELECT_USER = "SELECT user.user_id, user.password, user.first_name, user.last_name, user.email, user.photo, user.admin, user.status FROM user WHERE user.email = ? LIMIT 1";
-    private static final String INSERT_CREATE_ACCOUNT = "INSERT INTO user(password, first_name, last_name, email, photo, admin, status) VALUES (?,?,?,?,?,?,?)";
+    private static final int START_EXPERIENCE = 0;
+    private static final boolean START_STATUS = true;
+    private static final boolean START_ADMINISTRATOR = false;
+    private static final String START_RANK = ClientRank.BAFTA.getNameRank();
+
+    private static final String SELECT_USER = "SELECT user.user_id, user.password, user.first_name, user.last_name, user.email, user.photo, user.admin, user.status, user.experience, user.rank FROM user WHERE user.email = ? LIMIT 1";
+    private static final String INSERT_CREATE_ACCOUNT = "INSERT INTO user(password, first_name, last_name, email, photo, admin, status, experience, rank) VALUES (?,?,?,?,?,?,?,?,?)";
     private static final String DELETE_USER = "DELETE FROM user WHERE user.user_id = ?";
     private static final String SELECT_ALL_USER = "SELECT user.user_id, user.first_name, user.last_name, user.status FROM user WHERE user.admin = 0";
     private static final String UPDATE_USER_STATUS = "UPDATE user SET user.status = ? WHERE user.user_id = ?";
+    private static final String UPDATE_USER_EXPERIENCE = "UPDATE user SET user.experience = user.experience + ? WHERE user.user_id = ?";
+    private static final String UPDATE_USER_RANK = "UPDATE user SET user.rank = ? WHERE user.user_id = ?";
 
     public UserDAO(ProxyConnection connection) {
         super(connection);
+    }
+
+    public boolean updateExperience(final int USER_ID, final int EXPERIENCE) throws DAOException {
+        try(PreparedStatement statement = connection.prepareStatement(UPDATE_USER_EXPERIENCE)){
+            statement.setInt(1, EXPERIENCE);
+            statement.setInt(2, USER_ID);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
+        }
+    }
+
+    public boolean updateRankUser(final int USER_ID, final String RANK_NAME) throws DAOException {
+        try(PreparedStatement statement = connection.prepareStatement(UPDATE_USER_RANK)){
+            statement.setString(1, RANK_NAME);
+            statement.setInt(2, USER_ID);
+            statement.executeUpdate();
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
+        }
+        return true;
     }
 
     public User findUser(String email) throws DAOException {
@@ -36,6 +66,8 @@ public class UserDAO extends AbstractDAO<User>{
                     user.setPhoto(resultSet.getString(6));
                     user.setAdmin(resultSet.getBoolean(7));
                     user.setStatus(resultSet.getBoolean(8));
+                    user.setExperience(resultSet.getInt(9));
+                    user.setRank(resultSet.getString(10));
                     return user;
                 }
             }
@@ -64,8 +96,10 @@ public class UserDAO extends AbstractDAO<User>{
             statement.setString(3, user.getLastName());
             statement.setString(4, user.getEmail());
             statement.setString(5, user.getPhoto());
-            statement.setBoolean(6, false);
-            statement.setBoolean(7, true);
+            statement.setBoolean(6, START_ADMINISTRATOR);
+            statement.setBoolean(7, START_STATUS);
+            statement.setInt(8, START_EXPERIENCE);
+            statement.setString(9, START_RANK);
             statement.executeUpdate();
             return true;
         } catch (SQLException exception) {

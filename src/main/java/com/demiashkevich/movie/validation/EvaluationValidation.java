@@ -28,4 +28,8 @@ public class EvaluationValidation implements Validation<Evaluation> {
         return rating >= MIN_MARK && rating <= MAX_MARK;
     }
 
+    private String replace(String comment){
+        return comment.replace('<', '|');
+    }
+
 }

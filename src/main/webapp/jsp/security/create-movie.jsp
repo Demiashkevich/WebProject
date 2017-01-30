@@ -1,12 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../../css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../../css/basics.css">
     <script type="text/javascript" src="../../js/function.js"></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
       <h1 class="sc-title"><scan class="sc-title-text fade-in latest"><fmt:message key="create.movie.title"/></scan></h1>
     </section>
     <section  class="si-cm fade-in first"><!--Sign Input Create Movie-->
-      <form method="get">
+      <form method="post" action="movie">
         <ul class="si-list">
           <li class="si-item">
             <input class="form-input input-size" type="text" name="title" placeholder="<fmt:message key="create.movie.input.title"/>" autofocus="true" tabindex="1" required/>

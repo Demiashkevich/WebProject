@@ -12,6 +12,7 @@ public class Movie extends Entity {
     private String poster;
     private short length;
     private double rating;
+    private boolean status;
     private List<Country> countries;
     private List<Category> categories;
     private List<Crew> crews;
@@ -24,6 +25,14 @@ public class Movie extends Entity {
 
     public void setMovieId(long movieId) {
         this.movieId = movieId;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public String getTitle() {

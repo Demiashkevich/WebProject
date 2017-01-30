@@ -2,13 +2,13 @@
 <jsp:useBean id="movie" scope="session" type="com.demiashkevich.movie.entity.Movie"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setLocale value="${sessionScope.locale.language}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="../css/basic.css">
+  <link rel="stylesheet" type="text/css" href="../css/basics.css">
 </head>
 <body>
   <jsp:include page="global-header.jsp"/>
@@ -17,7 +17,7 @@
       <header class="sm-header fade-in middle">
         <div class="sm-hc"><!--Header Context-->
           <h1 class="sm-hc-title">${movie.title}</h1>
-          <c:if test="${user.admin}">
+          <c:if test="${user.admin && movie.status}">
             <div class="sm-hc-action">
               <div class="sm-hc-button"><a href="movie?command=edit_movie"><fmt:message key="movie.action.edit"/></a></div>
               <div class="sm-hc-button"><a href="movie?command=delete_movie&movie_id=${movie.movieId}"><fmt:message key="movie.action.delete"/></a></div>
@@ -76,7 +76,9 @@
         <div class="sc-hc"><!--Header Context-->
           <h1 class="sc-hc-title"><fmt:message key="movie.section.review.header"/></h1>
           <div class="sc-hc-action">
+            <c:if test="${movie.status}">
             <div class="sc-hc-button"><a href="movie?command=create_review&command_action=add_review"><fmt:message key="movie.action.add.review"/></a></div>
+            </c:if>
           </div>
         </div>
       </header>
@@ -87,24 +89,17 @@
               <h1 class="r-hc-title">${evaluation.title}</h1>
               <ul class="sr-hc-action">
                 <li class="sr-hc-button"><div class="r-mark">${evaluation.rating}</div></li>
-                <c:if test="${user.userId == evaluation.user.userId || user.admin}">
-                  <li class="sr-hc-button">
-                    <form method="post" action="movie">
-                      <input type="hidden" value="edit_review" name="command"/>
-                      <input type="hidden" value="update_review" name="command_action"/>
-                      <input type="hidden" value="${evaluation.title}" name="title"/>
-                      <input type="hidden" value="${evaluation.comment}" name="comment"/>
-                      <input type="hidden" value="${evaluation.rating}" name="rating"/>
-                      <input type="hidden" value="${movie.movieId}" name="movie_id"/>
-                      <input type="hidden" value="${movie.title}" name="movie_title"/>
-                      <input type="hidden" value="${evaluation.user.userId}" name="user_id"/>
-                    <a href="movie?command=edit_review&command_action=update_review&title=${evaluation.title}&comment=${evaluation.comment}&rating=${evaluation.rating}&movie_id=${movie.movieId}&movie_title=${movie.title}&user_id=${evaluation.user.userId}">
-                      <fmt:message key="movie.action.edit"/>
-                    </a>
-                      <button type="submit"><fmt:message key="movie.action.edit"/></button>
-                    </form>
-                  </li>
-                  <li class="sr-hc-button"><a href="movie?command=delete_review&movie_id=${movie.movieId}&user_id=${evaluation.user.userId}"><fmt:message key="movie.action.delete"/></a></li>
+                <c:if test="${movie.status}">
+                  <c:if test="${user.userId == evaluation.user.userId}">
+                    <li class="sr-hc-button">
+                      <a href="movie?command=edit_review&command_action=update_review&title=${evaluation.title}&comment=${evaluation.comment}&rating=${evaluation.rating}&movie_id=${movie.movieId}&movie_title=${movie.title}&user_id=${evaluation.user.userId}">
+                        <fmt:message key="movie.action.edit"/>
+                      </a>
+                    </li>
+                  </c:if>
+                  <c:if test="${user.admin || user.userId == evaluation.user.userId}">
+                    <li class="sr-hc-button"><a href="movie?command=delete_review&movie_id=${movie.movieId}&user_id=${evaluation.user.userId}"><fmt:message key="movie.action.delete"/></a></li>
+                  </c:if>
                 </c:if>
               </ul>
             </div>
@@ -114,7 +109,7 @@
           </p>
           <footer class="r-footer">
             <div class="r-writer">
-              ${evaluation.user.firstName} ${evaluation.user.lastName}
+              ${evaluation.user.rank} : ${evaluation.user.firstName} ${evaluation.user.lastName}
             </div>
           </footer>
         </article>

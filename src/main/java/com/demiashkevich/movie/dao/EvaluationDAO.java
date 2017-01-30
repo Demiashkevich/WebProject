@@ -16,13 +16,29 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
 
     private static final String INSERT_EVALUATION = "INSERT INTO evaluation(user_id, movie_id, title, comment, rating) VALUES(?,?,?,?,?)";
     private static final String CHECK_EXIST_EVALUATION = "SELECT 1 FROM evaluation WHERE evaluation.movie_id = ? AND evaluation.user_id = ? LIMIT 1";
-    private static final String SELECT_EVALUATION_BY_MOVIE_ID = "SELECT evaluation.title, evaluation.comment, evaluation.rating, user.user_id, user.first_name, user.last_name FROM evaluation INNER JOIN user ON evaluation.user_id = user.user_id WHERE evaluation.movie_id = ?";
+    private static final String SELECT_EVALUATION_BY_MOVIE_ID = "SELECT evaluation.title, evaluation.comment, evaluation.rating, user.user_id, user.first_name, user.last_name, user.rank FROM evaluation INNER JOIN user ON evaluation.user_id = user.user_id WHERE evaluation.movie_id = ?";
     private static final String DELETE_EVALUATION = "DELETE FROM evaluation WHERE evaluation.user_id = ? AND evaluation.movie_id = ?";
     private static final String UPDATE_EVALUATION = "UPDATE evaluation SET evaluation.title = ?, evaluation.comment = ?, evaluation.rating = ? WHERE evaluation.user_id = ? AND evaluation.movie_id = ?";
     private static final String CALL_PROCEDURE_UPDATE_RATING = "{CALL update_rating(?)}";
+    private static final String COUNT_EVALUATION = "SELECT COUNT(evaluation.movie_id) FROM evaluation WHERE evaluation.movie_id = ?";
 
     public EvaluationDAO(ProxyConnection connection) {
         super(connection);
+    }
+
+    public int findCountRecordsByMovieId(final long MOVIE_ID) throws DAOException {
+        int count = 0;
+        try(PreparedStatement statement = connection.prepareStatement(COUNT_EVALUATION)) {
+            statement.setLong(1, MOVIE_ID);
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()) {
+                    count = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            throw new DAOException(exception);
+        }
+        return count;
     }
 
     public boolean deleteItem(final long USER_ID, final long MOVIE_ID) throws DAOException {
@@ -147,6 +163,7 @@ public class EvaluationDAO extends AbstractDAO<Evaluation>{
                 user.setUserId(resultSet.getInt(4));
                 user.setFirstName(resultSet.getString(5));
                 user.setLastName(resultSet.getString(6));
+                user.setRank(resultSet.getString(7));
                 evaluation.setUser(user);
                 evaluations.add(evaluation);
             }
