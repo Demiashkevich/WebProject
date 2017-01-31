@@ -1,9 +1,12 @@
-<%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <html>
 <head>
-    <title>Error 429</title>
+    <title>Error page</title>
 </head>
 <body>
-Error 429
+<div>
+    <h1>Error 429</h1>
+    <h2>Too many requests.</h2>
+</div>
 </body>
 </html>

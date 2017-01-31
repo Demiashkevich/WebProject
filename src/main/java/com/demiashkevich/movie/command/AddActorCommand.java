@@ -15,23 +15,26 @@ public class AddActorCommand implements Command {
 
     private static final Logger LOGGER = Logger.getLogger(AddActorCommand.class);
 
+    private static final String PAR_FIRST_NAME = "first_name";
+    private static final String PAR_LAST_NAME = "last_name";
+    private static final String PAR_BIOGRAPHY = "biography";
+    private static final String PAR_PHOTO = "photo";
+    private static final String PARS_MOVIES = "movies";
+
     private static final String PAGE_SUCCESS = "path.page.success";
-    private static final String PAGE_ADD_ACTOR = "path.page.add_actor";
     private static final String PAGE_ERROR = "path.page.error";
-    private static final String PAGE_ERROR_ADD_ACTOR = "";
+    private static final String PAGE_ERROR_ADD_ACTOR = "path.error.page.add.actor";
 
-
-    private static final String ERROR_VALIDATE = "VALIDATE ERROR";
-    private static final String ERROR_ADDITION = "ADDITION ERROR";
+    private static final String ATTR_ERROR = "error";
 
     @Override
     public String execute(HttpServletRequest request) {
         Actor actor = new Actor();
-        actor.setFirstName(request.getParameter("first_name"));
-        actor.setLastName(request.getParameter("last_name"));
-        actor.setBiography(request.getParameter("biography"));
-        actor.setPhoto(request.getParameter("photo"));
-        String[] moviesId = request.getParameterValues("movies");
+        actor.setFirstName(request.getParameter(PAR_FIRST_NAME));
+        actor.setLastName(request.getParameter(PAR_LAST_NAME));
+        actor.setBiography(request.getParameter(PAR_BIOGRAPHY));
+        actor.setPhoto(request.getParameter(PAR_PHOTO));
+        String[] moviesId = request.getParameterValues(PARS_MOVIES);
         List<Movie> movies = this.parseMovieId(moviesId);
         actor.setMovies(movies);
 
@@ -44,7 +47,7 @@ public class AddActorCommand implements Command {
             }
         } catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_ADD_ACTOR);
         }
     }

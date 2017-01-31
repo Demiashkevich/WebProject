@@ -9,23 +9,31 @@ import javax.servlet.http.HttpServletRequest;
 
 public class EditReviewCommand implements Command {
 
+    private static final String PAR_TITLE = "title";
+    private static final String PAR_COMMENT = "comment";
+    private static final String PAR_RATING = "rating";
+    private static final String PAR_MOVIE_ID = "movie_id";
+    private static final String PAR_MOVIE_TITLE = "movie_title";
+    private static final String PAR_USER_ID = "user_id";
+    private static final String ATTR_EVALUATION = "evaluation";
+
     private static final String PAGE_ADD_REVIEW = "path.page.add_review";
 
     @Override
     public String execute(HttpServletRequest request) {
         Evaluation evaluation = new Evaluation();
-        evaluation.setTitle(request.getParameter("title"));
-        evaluation.setComment(request.getParameter("comment"));
-        evaluation.setRating(Double.parseDouble(request.getParameter("rating")));
+        evaluation.setTitle(request.getParameter(PAR_TITLE));
+        evaluation.setComment(request.getParameter(PAR_COMMENT));
+        evaluation.setRating(Double.parseDouble(request.getParameter(PAR_RATING)));
         Movie movie = new Movie();
-        movie.setMovieId(Integer.parseInt(request.getParameter("movie_id")));
-        movie.setTitle(request.getParameter(request.getParameter("movie_title")));
+        movie.setMovieId(Integer.parseInt(request.getParameter(PAR_MOVIE_ID)));
+        movie.setTitle(request.getParameter(request.getParameter(PAR_MOVIE_TITLE)));
         evaluation.setMovie(movie);
         User user = new User();
-        user.setUserId(Integer.parseInt(request.getParameter("user_id")));
+        user.setUserId(Integer.parseInt(request.getParameter(PAR_USER_ID)));
         evaluation.setUser(user);
 
-        request.setAttribute("evaluation", evaluation);
+        request.setAttribute(ATTR_EVALUATION, evaluation);
         return ConfigurationManager.getKey(PAGE_ADD_REVIEW);
     }
 

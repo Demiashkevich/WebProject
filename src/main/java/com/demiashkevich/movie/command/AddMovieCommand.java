@@ -14,10 +14,9 @@ public class AddMovieCommand extends AbstractActionMovieCommand {
 
     private static final String PAGE_SUCCESS = "path.page.success";
     private static final String PAGE_ERROR = "path.page.error";
-    private static final String PAGE_ERROR_ADD_MOVIE = "";
+    private static final String PAGE_ERROR_ADD_MOVIE = "path.error.page.add.movie";
 
-    private static final String ERROR_VALIDATE = "VALIDATE ERROR";
-    private static final String ERROR_ADDITION = "ADDITION ERROR";
+    private static final String ATTR_ERROR = "error";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -32,7 +31,7 @@ public class AddMovieCommand extends AbstractActionMovieCommand {
             }
         } catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_ADD_MOVIE);
         }
     }

@@ -18,11 +18,17 @@ public class EmptyCommand implements Command {
 
     private static final Logger LOGGER = Logger.getLogger(EmptyCommand.class);
 
+    private static final String ATTR_MOVIES = "movies";
+    private static final String ATTR_ACTORS = "actors";
+    private static final String ATTR_PARAMETERS = "parameters";
+
     private static final String COUNT_MOVIES = "home.count.show.movie";
     private static final String COUNT_ACTORS = "home.count.show.actor";
 
     private static final String PAGE_HOME = "path.page.home";
-    private static final String PAGE_ERROR_HOME = "";
+    private static final String PAGE_ERROR_HOME = "path.error.page.transfer";
+
+    private static final String ATTR_ERROR = "error";
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -32,21 +38,21 @@ public class EmptyCommand implements Command {
             MovieService movieService = new MovieService();
             List<Movie> movies = movieService.findMovies(COUNT_M);
 
-            request.setAttribute("movies", movies);
+            request.setAttribute(ATTR_MOVIES, movies);
 
             ActorService actorService = new ActorService();
             List<Actor> actors = actorService.findActors(COUNT_A);
-            request.setAttribute("actors", actors);
+            request.setAttribute(ATTR_ACTORS, actors);
 
             HttpSession session = request.getSession(true);
             RequestParameter parameter = new RequestParameter();
             parameter.setCommand(EnumCommand.EMPTY);
-            RequestParameterList parameters = (RequestParameterList)session.getAttribute("parameters");
+            RequestParameterList parameters = (RequestParameterList)session.getAttribute(ATTR_PARAMETERS);
             parameters.offerLast(parameter);
-            session.setAttribute("parameters", parameters);
+            session.setAttribute(ATTR_PARAMETERS, parameters);
         }catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_HOME);
         }
         return ConfigurationManager.getKey(PAGE_HOME);

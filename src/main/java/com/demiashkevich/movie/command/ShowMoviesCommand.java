@@ -16,10 +16,16 @@ public class ShowMoviesCommand implements Command{
 
     private static final Logger LOGGER = Logger.getLogger(ShowMoviesCommand.class);
 
-    private static final String MOVIE_COUNT = "movies.count.show.movie";
+    private static final String CURRENT_PAGE = "currentPage";
+    private static final String MOVIES = "movies";
+    private static final String COUNT_PAGES = "countPage";
+    private static final String ATTR_PARAMETERS = "parameters";
 
+    private static final String MOVIE_COUNT = "movies.count.show.movie";
     private static final String PAGE_MOVIES = "path.page.movies";
-    private static final String PAGE_ERROR_MOVIE = "";
+    private static final String PAGE_ERROR_MOVIE = "path.page.error.transfer";
+
+    private static final String ATTR_ERROR = "error";
 
     private static final int START_PAGE = 1;
     private static final int MIN_BORDER = 0;
@@ -27,7 +33,7 @@ public class ShowMoviesCommand implements Command{
     @Override
     public String execute(HttpServletRequest request) {
         final int COUNT = Integer.parseInt(ConfigurationManager.getKey(MOVIE_COUNT));
-        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        int currentPage = Integer.parseInt(request.getParameter(CURRENT_PAGE));
         try {
             MovieService movieService = new MovieService();
             int countPage = movieService.countPage(COUNT);
@@ -36,20 +42,20 @@ public class ShowMoviesCommand implements Command{
             }
             List<Movie> movies = movieService.findMovies(currentPage, COUNT);
 
-            request.setAttribute("movies", movies);
-            request.setAttribute("countPage", countPage);
-            request.setAttribute("currentPage", currentPage);
+            request.setAttribute(MOVIES, movies);
+            request.setAttribute(COUNT_PAGES, countPage);
+            request.setAttribute(CURRENT_PAGE, currentPage);
 
             HttpSession session = request.getSession();
             RequestParameter requestParameter = new RequestParameter();
-            requestParameter.put("currentPage", String.valueOf(currentPage));
+            requestParameter.put(CURRENT_PAGE, String.valueOf(currentPage));
             requestParameter.setCommand(EnumCommand.SHOW_MOVIES);
-            RequestParameterList parameters = (RequestParameterList)session.getAttribute("parameters");
+            RequestParameterList parameters = (RequestParameterList)session.getAttribute(ATTR_PARAMETERS);
             parameters.offerLast(requestParameter);
-            session.setAttribute("parameter", parameters);
+            session.setAttribute(ATTR_PARAMETERS, parameters);
         } catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_MOVIE);
         }
         return ConfigurationManager.getKey(PAGE_MOVIES);

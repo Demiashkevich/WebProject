@@ -11,36 +11,47 @@ import java.util.List;
 
 public abstract class AbstractActionMovieCommand implements Command {
 
+    private static final String CATEGORIES = "categories";
+    private static final String COUNTRIES = "countries";
+    private static final String ACTORS = "actors";
+    private static final String CREWS = "crews";
+    private static final String ROLES = "roles";
+
+    private static final String PAR_TITLE = "title";
+    private static final String PAR_DATE = "date";
+    private static final String PAR_DESCRIPTION = "description";
+    private static final String PAR_LENGTH = "length";
+
     @Override
     public abstract String execute(HttpServletRequest request);
 
     void fillRequest(HttpServletRequest request) throws ServiceException {
         CategoryService categoryService = new CategoryService();
         List<Category> categories = categoryService.findAllCategories();
-        request.setAttribute("categories", categories);
+        request.setAttribute(CATEGORIES, categories);
 
         CountryService countryService = new CountryService();
         List<Country> countries = countryService.findAllCountries();
-        request.setAttribute("countries", countries);
+        request.setAttribute(COUNTRIES, countries);
 
         ActorService actorService = new ActorService();
         List<Actor> actors = actorService.findAllActors();
-        request.setAttribute("actors", actors);
+        request.setAttribute(ACTORS, actors);
 
         CrewService crewService = new CrewService();
         List<Crew> crews = crewService.findAllCrews();
-        request.setAttribute("crews", crews);
+        request.setAttribute(CREWS, crews);
 
         RoleService roleService = new RoleService();
         List<Role> roles = roleService.findAllRoles();
-        request.setAttribute("roles", roles);
+        request.setAttribute(ROLES, roles);
     }
 
     Movie parseRequest(HttpServletRequest request) {
-        String title = request.getParameter("title");
-        String date = request.getParameter("date");
-        String description = request.getParameter("description");
-        String length = request.getParameter("length");
+        String title = request.getParameter(PAR_TITLE);
+        String date = request.getParameter(PAR_DATE);
+        String description = request.getParameter(PAR_DESCRIPTION);
+        String length = request.getParameter(PAR_LENGTH);
         Movie movie = new Movie();
         movie.setTitle(title);
         if(!date.isEmpty()) {
@@ -50,17 +61,17 @@ public abstract class AbstractActionMovieCommand implements Command {
         if(!length.isEmpty()) {
             movie.setLength(Short.parseShort(length));
         }
-        String[] categoriesId = request.getParameterValues("categories");
+        String[] categoriesId = request.getParameterValues(CATEGORIES);
         List<Category> categories = this.parseCategoriesId(categoriesId);
         movie.setCategories(categories);
-        String[] countriesId = request.getParameterValues("countries");
+        String[] countriesId = request.getParameterValues(COUNTRIES);
         List<Country> countries = this.parseCountriesId(countriesId);
         movie.setCountries(countries);
-        String[] crewsId = request.getParameterValues("crews");
-        String[] rolesId = request.getParameterValues("roles");
+        String[] crewsId = request.getParameterValues(CREWS);
+        String[] rolesId = request.getParameterValues(ROLES);
         List<Crew> crews = this.parseCrewsRolesId(crewsId, rolesId);
         movie.setCrews(crews);
-        String[] actorsId = request.getParameterValues("actors");
+        String[] actorsId = request.getParameterValues(ACTORS);
         List<Actor> actors = this.parseActorId(actorsId);
         movie.setActors(actors);
         return movie;

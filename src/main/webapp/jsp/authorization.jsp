@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="${sessionScope.locale.language}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="properties.text"/>
 <html>
 <head>
@@ -19,7 +19,7 @@
     <form method="post" action="movie">
       <ul class="si-list">
         <li class="si-item">
-          ${message_error}
+          ${error}
         </li>
         <li class="si-item">
           <input class="form-input" type="text" name="email" required="true" placeholder="<fmt:message key="authorization.input.email"/>" autofocus="true" tabindex="1" autocomplete="false"/>

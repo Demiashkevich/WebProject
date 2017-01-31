@@ -13,18 +13,21 @@ public class CreateActorCommand implements Command {
 
     private static final Logger LOGGER = Logger.getLogger(CreateActorCommand.class);
 
-    private static final String PAGE_CREATE_ACTOR = "path.page.add_actor";
-    private static final String PAGE_ERROR_CREATE_ACTOR = "";
+    private static final String ATTR_MOVIES = "movies";
 
+    private static final String PAGE_CREATE_ACTOR = "path.page.add_actor";
+    private static final String PAGE_ERROR_CREATE_ACTOR = "path.error.page.transfer";
+
+    private static final String ATTR_ERROR = "error";
     @Override
     public String execute(HttpServletRequest request) {
         try {
             MovieService movieService = new MovieService();
             List<Movie> movies = movieService.findAllMovies();
-            request.setAttribute("movies", movies);
+            request.setAttribute(ATTR_MOVIES, movies);
         } catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_CREATE_ACTOR);
         }
         return ConfigurationManager.getKey(PAGE_CREATE_ACTOR);

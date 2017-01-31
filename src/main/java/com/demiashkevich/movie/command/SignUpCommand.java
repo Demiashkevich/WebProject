@@ -3,53 +3,70 @@ package com.demiashkevich.movie.command;
 import com.demiashkevich.movie.entity.User;
 import com.demiashkevich.movie.exception.ServiceException;
 import com.demiashkevich.movie.manager.ConfigurationManager;
+import com.demiashkevich.movie.manager.MessageManager;
 import com.demiashkevich.movie.service.UserService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 public class SignUpCommand implements Command{
 
     private static final Logger LOGGER = Logger.getLogger(SignUpCommand.class);
 
-    private static final String MESSAGE = "This email was exist.";
+    private static final String ATTR_LOCALE = "locale";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String PASSWORD = "password";
+    private static final String EMAIL = "email";
+
     private static final String PAGE_ERROR = "path.page.error";
     private static final String PAGE_REGISTRATION = "path.page.registration";
     private static final String PAGE_AUTHORIZATION = "path.page.authorization";
-    private static final String PAGE_ERROR_REGISTRATION = "";
+    private static final String PAGE_ERROR_REGISTRATION = "path.error.page.registration";
 
-    private static final String ERROR_VALIDATE = "VALIDATE ERROR";
-    private static final String ERROR_ADDITION = "ADDITION ERROR";
+    private static final String ATTR_ERROR = "error";
+    private static final String ERROR_MESSAGE_EXIST = "error.registration.exist";
+    private static final String ERROR_MESSAGE_VALIDATE = "error.validate";
+
+    private static final int ERROR_VALIDATION = -1;
+    private static final int ERROR_EXIST = 0;
+    private static final int SUCCESS = 1;
 
     @Override
     public String execute(HttpServletRequest request) {
         User user = new User();
-        user.setEmail(request.getParameter("email"));
-        user.setPassword(request.getParameter("password"));
-        user.setFirstName(request.getParameter("first_name"));
-        user.setLastName(request.getParameter("last_name"));
+        user.setEmail(request.getParameter(EMAIL));
+        user.setPassword(request.getParameter(PASSWORD));
+        user.setFirstName(request.getParameter(FIRST_NAME));
+        user.setLastName(request.getParameter(LAST_NAME));
         try {
             UserService userService = new UserService();
             int result = userService.addUser(user);
             switch (result) {
-                case -1: {
-                    request.setAttribute("error", ERROR_VALIDATE);
+                case ERROR_VALIDATION: {
+                    String error = MessageManager.getKey(ERROR_MESSAGE_VALIDATE, (Locale) request.getSession().getAttribute(ATTR_LOCALE));
+                    request.setAttribute(ATTR_ERROR, error);
                     return ConfigurationManager.getKey(PAGE_ERROR);
                 }
-                case 0: {
-                    request.setAttribute("password", user.getPassword());
-                    request.setAttribute("first_name", user.getFirstName());
-                    request.setAttribute("last_name", user.getLastName());
-                    request.setAttribute("message_error", MESSAGE);
+                case ERROR_EXIST: {
+                    request.setAttribute(PASSWORD, user.getPassword());
+                    request.setAttribute(FIRST_NAME, user.getFirstName());
+                    request.setAttribute(LAST_NAME, user.getLastName());
+                    String error = MessageManager.getKey(ERROR_MESSAGE_EXIST, (Locale) request.getSession().getAttribute(ATTR_LOCALE));
+                    request.setAttribute(ATTR_ERROR, error);
                     return ConfigurationManager.getKey(PAGE_REGISTRATION);
                 }
-                default: {
+                case SUCCESS: {
                     return ConfigurationManager.getKey(PAGE_AUTHORIZATION);
+                }
+                default: {
+                    return ConfigurationManager.getKey(PAGE_ERROR);
                 }
             }
         } catch (ServiceException exception) {
             LOGGER.error(exception);
-            request.setAttribute("error", exception);
+            request.setAttribute(ATTR_ERROR, exception);
             return ConfigurationManager.getKey(PAGE_ERROR_REGISTRATION);
         }
     }

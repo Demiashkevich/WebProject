@@ -1,9 +1,12 @@
-<%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <html>
 <head>
-    <title>Error 404</title>
+    <title>Error Page</title>
 </head>
 <body>
-  ERROR 404
+<div>
+    <h1>Error 404</h1>
+    <h2>The page you are looking for can't found.</h2>
+</div>
 </body>
 </html>

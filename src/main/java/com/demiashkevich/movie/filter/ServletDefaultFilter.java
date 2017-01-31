@@ -5,17 +5,26 @@ import com.demiashkevich.movie.type.ClientType;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Locale;
 
-@WebFilter(urlPatterns = "/movie", servletNames = {"Controller"})
+@WebFilter(urlPatterns = "/movie", servletNames = {"Controller"}, initParams = {
+        @WebInitParam(name = "LANGUAGE", value = "ru"),
+        @WebInitParam(name = "COUNTRY", value = "RU")
+})
 public class ServletDefaultFilter implements Filter {
+
+    private String language;
+    private String country;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        language = filterConfig.getInitParameter("LANGUAGE");
+        country = filterConfig.getInitParameter("COUNTRY");
     }
 
     @Override
@@ -31,7 +40,7 @@ public class ServletDefaultFilter implements Filter {
             session.setAttribute("role", type);
         }
         if(locale == null){
-            locale = Locale.getDefault();
+            locale = new Locale(language, country);
             session.setAttribute("locale", locale);
         }
         if(parameters == null){
@@ -43,6 +52,6 @@ public class ServletDefaultFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        language = null;
     }
 }
