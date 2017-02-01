@@ -20,11 +20,16 @@ public class ActorValidation implements Validation<Actor> {
         if(biography == null || biography.isEmpty()){
             return false;
         }
+        this.replaceCharacter(biography);
         return true;
     }
 
     private boolean partOfNameValidate(String firstName){
         return firstName.matches(REGEX_NAME);
+    }
+
+    private String replaceCharacter(String biography){
+        return biography.replace('<', '|');
     }
 
 

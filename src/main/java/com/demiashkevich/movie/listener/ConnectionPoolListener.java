@@ -15,7 +15,7 @@ public class ConnectionPoolListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         final int SIZE = Integer.parseInt(ConfigurationManager.getKey(POOL_SIZE));
-        ConnectionPool.buildInstance(10);
+        ConnectionPool.buildInstance(SIZE);
     }
 
     @Override

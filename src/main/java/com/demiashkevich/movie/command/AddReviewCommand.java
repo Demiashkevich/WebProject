@@ -49,7 +49,7 @@ public class AddReviewCommand implements Command{
 
         try {
             EvaluationService evaluationService = new EvaluationService();
-            int result = evaluationService.addEvaluation(evaluation, user);
+            int result = evaluationService.addEvaluation(evaluation);
             switch (result) {
                 case ERROR_VALIDATION: {
                     request.setAttribute(ATTR_ERROR, MessageManager.getKey(ERROR_MESSAGE_VALIDATE, (Locale) request.getSession().getAttribute(ATTR_LOCALE)));

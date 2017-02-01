@@ -25,6 +25,11 @@ public abstract class AbstractActionMovieCommand implements Command {
     @Override
     public abstract String execute(HttpServletRequest request);
 
+
+    /**Fill request
+     * @param request
+     * @throws ServiceException
+     */
     void fillRequest(HttpServletRequest request) throws ServiceException {
         CategoryService categoryService = new CategoryService();
         List<Category> categories = categoryService.findAllCategories();
@@ -47,6 +52,10 @@ public abstract class AbstractActionMovieCommand implements Command {
         request.setAttribute(ROLES, roles);
     }
 
+    /**Parse request, create and fill object Movie
+     * @param request
+     * @return object movie
+     */
     Movie parseRequest(HttpServletRequest request) {
         String title = request.getParameter(PAR_TITLE);
         String date = request.getParameter(PAR_DATE);
@@ -78,6 +87,10 @@ public abstract class AbstractActionMovieCommand implements Command {
     }
 
 
+    /**Create list objects with parameters
+     * @param categoriesId
+     * @return list categories with field categoryId
+     */
     private List<Category> parseCategoriesId(String[] categoriesId){
         List<Category> categories = new ArrayList<>();
         for(String categoryId : categoriesId){
@@ -88,6 +101,11 @@ public abstract class AbstractActionMovieCommand implements Command {
         return categories;
     }
 
+
+    /**Create list objects with parameters
+     * @param countriesId
+     * @return list counties with filed countryId
+     */
     private List<Country> parseCountriesId(String[] countriesId){
         List<Country> categories = new ArrayList<>();
         for(String countryId : countriesId){
@@ -98,6 +116,12 @@ public abstract class AbstractActionMovieCommand implements Command {
         return categories;
     }
 
+
+    /**Create list objects with parameters
+     * @param crewsId
+     * @param rolesId
+     * @return list crew with field crewId
+     */
     private List<Crew> parseCrewsRolesId(String[] crewsId, String[] rolesId){
         List<Crew> crews = new ArrayList<>();
         if(crewsId.length == rolesId.length) {
@@ -113,6 +137,10 @@ public abstract class AbstractActionMovieCommand implements Command {
         return crews;
     }
 
+    /**Create list objects with parameters
+     * @param actorsId
+     * @return list actors with field actorId
+     */
     private List<Actor> parseActorId(String[] actorsId){
         List<Actor> actors = new ArrayList<>();
         for(String actorId : actorsId){

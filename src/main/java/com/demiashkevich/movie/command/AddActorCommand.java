@@ -52,6 +52,10 @@ public class AddActorCommand implements Command {
         }
     }
 
+    /**Create list objects with parameters
+     * @param moviesId
+     * @return list movies with field moviesId
+     */
     private List<Movie> parseMovieId(String[] moviesId){
         List<Movie> movies = new ArrayList<>();
         for (String movieId : moviesId) {

@@ -16,6 +16,12 @@ public abstract class AbstractService {
 
     public AbstractService() {}
 
+
+    /**Using the functions set. Transformation list to set, and conversely, back to list
+     * @param items list object to convert
+     * @param <T>
+     * @return list transformation list
+     */
     protected <T extends Entity> List<T> containListItems(List<T> items){
         Set<T> sendList = new HashSet<>();
         sendList.addAll(items);

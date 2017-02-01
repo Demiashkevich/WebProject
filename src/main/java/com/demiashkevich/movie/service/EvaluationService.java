@@ -5,9 +5,9 @@ import com.demiashkevich.movie.dao.EvaluationDAO;
 import com.demiashkevich.movie.dao.MovieDAO;
 import com.demiashkevich.movie.dao.UserDAO;
 import com.demiashkevich.movie.entity.Evaluation;
-import com.demiashkevich.movie.entity.User;
 import com.demiashkevich.movie.exception.DAOException;
 import com.demiashkevich.movie.exception.ServiceException;
+import com.demiashkevich.movie.manager.ConfigurationManager;
 import com.demiashkevich.movie.validation.EvaluationValidation;
 import com.demiashkevich.movie.validation.Validation;
 
@@ -16,6 +16,7 @@ public class EvaluationService extends AbstractService {
     private static final String EXPERIENCE = "count.add.experience";
 
     private static final int RATING_INTERVAL = 2;
+    private static final int STOP_COUNT_RATING = 2;
 
     private static final int ERROR_VALIDATION = -1;
     private static final int ERROR_EXIST = 0;
@@ -23,7 +24,7 @@ public class EvaluationService extends AbstractService {
 
     public EvaluationService() {}
 
-    public int addEvaluation(Evaluation evaluation, User user) throws ServiceException {
+    public int addEvaluation(Evaluation evaluation) throws ServiceException {
         try {
             connection = ConnectionPool.takeConnection();
 
@@ -38,16 +39,17 @@ public class EvaluationService extends AbstractService {
                 return ERROR_EXIST;
             }
             int countEvaluation = evaluationDAO.findCountRecordsByMovieId(evaluation.getMovie().getMovieId());
+            int experience = Integer.parseInt(ConfigurationManager.getKey(EXPERIENCE));
             UserDAO userDAO = new UserDAO(connection);
-            if(countEvaluation <= 2){
-                userDAO.updateExperience(user.getUserId(), 20);
+            if(countEvaluation <= STOP_COUNT_RATING){
+                userDAO.updateExperience(userId, experience);
             } else {
                 MovieDAO movieDAO = new MovieDAO(connection);
                 double rating = movieDAO.findRatingByMovieId(movieId);
                 if(rating - RATING_INTERVAL <= evaluation.getRating() && evaluation.getRating() >= rating + RATING_INTERVAL){
-                    userDAO.updateExperience(user.getUserId(), 20);
+                    userDAO.updateExperience(userId, experience);
                 } else {
-                    userDAO.updateExperience(user.getUserId(), 20 / 2);
+                    userDAO.updateExperience(userId, experience / 2);
                 }
             }
             evaluationDAO.addItem(evaluation);
@@ -86,7 +88,8 @@ public class EvaluationService extends AbstractService {
             evaluationDAO.deleteItem(userId, movieId);
             evaluationDAO.updateRating(movieId);
             UserDAO userDAO = new UserDAO(connection);
-            userDAO.updateExperience(userId, -20);
+            int experience = Integer.parseInt(ConfigurationManager.getKey(EXPERIENCE));
+            userDAO.updateExperience(userId, -experience);
         } catch (DAOException exception) {
             throw new ServiceException(exception);
         } finally {

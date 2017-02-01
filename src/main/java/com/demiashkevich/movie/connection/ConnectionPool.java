@@ -21,6 +21,9 @@ public class ConnectionPool{
         connections = new ArrayBlockingQueue<>(POOL_SIZE);
     }
 
+    /**Create connection pool and call method which fill him
+     * @param POOL_SIZE
+     */
     public static void buildInstance(final int POOL_SIZE) {
         if(!instance.get()) {
             try {
@@ -36,6 +39,9 @@ public class ConnectionPool{
         }
     }
 
+    /**Create connection and fill connection pool
+     * @param POOL_SIZE
+     */
     private void fillConnectionPool(final int POOL_SIZE){
         for (int i = 0; i < POOL_SIZE; i++) {
             CreateConnection connection = new CreateConnection();
@@ -43,6 +49,9 @@ public class ConnectionPool{
         }
     }
 
+    /**Take connection from connection pool
+     * @return Connection
+     */
     public static ProxyConnection takeConnection(){
         ProxyConnection connection = null;
         try {
@@ -53,6 +62,10 @@ public class ConnectionPool{
         return connection;
     }
 
+
+    /** Put created earlie connection in connection pool
+     * @param connection
+     */
     public static void putConnection(ProxyConnection connection){
         try {
             connections.put(connection);
@@ -61,6 +74,9 @@ public class ConnectionPool{
         }
     }
 
+    /**
+     * Destroy ConnectionPool
+     */
     public static void close(){
         final int POOL_SIZE = connections.size();
         for(int i = 0; i < POOL_SIZE; i++){

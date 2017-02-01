@@ -24,10 +24,15 @@ public class MovieValidation implements Validation<Movie> {
         if(!this.lengthValidate(length)){
             return false;
         }
+        this.replaceCharacter(description);
         return true;
     }
 
     private boolean lengthValidate(int length){
         return length >= 0 && length <= 300;
+    }
+
+    private String replaceCharacter(String description){
+        return description.replace('<', '|');
     }
 }

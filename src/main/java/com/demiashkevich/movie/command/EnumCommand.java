@@ -39,6 +39,10 @@ public enum EnumCommand {
         this.command = command;
     }
 
+
+    /**
+     * @return object created command
+     */
     public Command getCommand() {
         return command;
     }

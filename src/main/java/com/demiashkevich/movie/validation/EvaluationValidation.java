@@ -21,6 +21,7 @@ public class EvaluationValidation implements Validation<Evaluation> {
         if(!this.ratingValidate(rating)){
             return false;
         }
+        this.replaceCharacter(comment);
         return true;
     }
 
@@ -28,7 +29,7 @@ public class EvaluationValidation implements Validation<Evaluation> {
         return rating >= MIN_MARK && rating <= MAX_MARK;
     }
 
-    private String replace(String comment){
+    private String replaceCharacter(String comment){
         return comment.replace('<', '|');
     }
 
